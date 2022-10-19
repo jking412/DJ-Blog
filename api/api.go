@@ -16,6 +16,7 @@ func Register(r *gin.Engine) {
 	postGroup := r.Group("/post")
 	{
 		postGroup.GET("/:id", pc.Detail)
+		postGroup.GET("/delete/:id", pc.Delete)
 	}
 
 	r.NoRoute(NoRouteHandler)

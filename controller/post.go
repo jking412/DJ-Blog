@@ -71,3 +71,15 @@ func (pc *PostController) Detail(c *gin.Context) {
 		"post": postDetailResp,
 	})
 }
+
+func (pc *PostController) Delete(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		logrus.Warn("Request param id is not a number")
+		c.HTML(http.StatusBadRequest, "error", gin.H{})
+	}
+	post := &model.Post{}
+	post.Id = id
+	post.DeletePostById()
+	c.HTML(http.StatusOK, "index", gin.H{})
+}

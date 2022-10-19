@@ -33,3 +33,9 @@ func (p *Post) GetPostById() *Post {
 	}
 	return post
 }
+
+func (p *Post) DeletePostById() {
+	if err := database.DB.Where("id = ?", p.Id).Delete(p).Error; err != nil {
+		logrus.Warn("Delete post by id failed")
+	}
+}
