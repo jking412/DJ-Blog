@@ -5,6 +5,9 @@ template:
   path:
     - ./views/front/*.html
 
+static:
+    path: ./static
+
 database:
   type: sqlite
   mysql:
