@@ -6,7 +6,13 @@
     <title>Title</title>
 </head>
 <body>
-
+    {{range $index,$post := .posts}}
+        {{$post.Id}}
+        <br>
+        {{$post.Title}}
+        <br>
+        {{$post.Content}}
+    {{end}}
 </body>
 </html>
 {{end}}
