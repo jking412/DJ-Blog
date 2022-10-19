@@ -1,0 +1,2 @@
+time="2022-10-19T10:27:55+08:00" level=info msg="Logger initialized" func=DJ-Blog/pkg/logger.InitLogger file="D:/code/Goland/DJ-Blog/pkg/logger/logger.go:18"
+time="2022-10-19T10:27:55+08:00" level=info msg="Template loaded" func=DJ-Blog/pkg/template.InitTemplate file="D:/code/Goland/DJ-Blog/pkg/template/template.go:12"
