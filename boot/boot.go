@@ -1,6 +1,7 @@
 package boot
 
 import (
+	"DJ-Blog/model"
 	"DJ-Blog/pkg/database"
 	"DJ-Blog/pkg/logger"
 	"DJ-Blog/pkg/viperlib"
@@ -12,7 +13,7 @@ func Initialize() {
 	logger.InitLogger()
 	database.InitDB()
 
-	err := database.DB.AutoMigrate()
+	err := database.DB.AutoMigrate(&model.Post{})
 	if err != nil {
 		logrus.Error("Database migration failed")
 		panic(err)
