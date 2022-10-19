@@ -1,0 +1,18 @@
+{{define "index"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {{range $index,$post := .posts}}
+        {{$post.Id}}
+        <br>
+        {{$post.Title}}
+        <br>
+        {{$post.Content}}
+    {{end}}
+</body>
+</html>
+{{end}}
