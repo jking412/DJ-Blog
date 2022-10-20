@@ -2,12 +2,21 @@ package main
 
 import (
 	"DJ-Blog/boot"
+	"DJ-Blog/model"
+	"DJ-Blog/pkg/database"
 	"testing"
 )
 
 func TestMain(m *testing.M) {
 	boot.Initialize()
 	m.Run()
+}
+
+func TestTemp(t *testing.T) {
+	post := &model.Post{
+		Content: "modified",
+	}
+	database.DB.Where("id = ?", 3).Updates(post)
 }
 
 //func TestMarkdown(t *testing.T) {

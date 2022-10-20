@@ -23,9 +23,16 @@ type PostDetailResp struct {
 	Stared  bool
 }
 
+type PostUpdateReq struct {
+	Id      uint64
+	Content string
+	Likes   uint64
+	Stared  bool
+}
+
 func (pc *PostController) Index(c *gin.Context) {
 	post := &model.Post{}
-	posts := post.GetAllPosts()
+	posts, _ := post.GetAllPosts()
 
 	var postIndexResp []PostIndexResp
 
@@ -54,7 +61,7 @@ func (pc *PostController) Detail(c *gin.Context) {
 	}
 	post := &model.Post{}
 	post.Id = id
-	post = post.GetPostById()
+	post, _ = post.GetPostById()
 	postDetailResp := &PostDetailResp{
 		PostBaseResp: request.PostBaseResp{
 			Id:        post.Id,
@@ -72,6 +79,29 @@ func (pc *PostController) Detail(c *gin.Context) {
 	})
 }
 
+func (pc *PostController) Update(c *gin.Context) {
+	Id, _ := strconv.ParseUint(c.PostForm("id"), 10, 64)
+	Content := c.PostForm("content")
+	Likes, _ := strconv.ParseUint(c.PostForm("likes"), 10, 64)
+	Stared, _ := strconv.ParseBool(c.PostForm("stared"))
+	postUpdateReq := &PostUpdateReq{
+		Id:      Id,
+		Content: Content,
+		Likes:   Likes,
+		Stared:  Stared,
+	}
+	post := &model.Post{
+		BaseModel: model.BaseModel{
+			Id: postUpdateReq.Id,
+		},
+		Content: postUpdateReq.Content,
+		Likes:   postUpdateReq.Likes,
+		Stared:  postUpdateReq.Stared,
+	}
+	post.Update()
+	c.Redirect(http.StatusFound, "/post/"+strconv.FormatUint(post.Id, 10))
+}
+
 func (pc *PostController) Delete(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -81,5 +111,5 @@ func (pc *PostController) Delete(c *gin.Context) {
 	post := &model.Post{}
 	post.Id = id
 	post.DeletePostById()
-	c.HTML(http.StatusOK, "index", gin.H{})
+	c.Redirect(http.StatusFound, "/")
 }
