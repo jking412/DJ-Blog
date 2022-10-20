@@ -16,9 +16,14 @@ func Register(r *gin.Engine) {
 	postGroup := r.Group("/post")
 	{
 		postGroup.GET("/:id", pc.Detail)
-		postGroup.POST("/create", pc.Create)
-		postGroup.GET("/delete/:id", pc.Delete)
+
+		postGroup.GET("/create", pc.Create)
+		postGroup.POST("/store", pc.Store)
+
+		postGroup.GET("/update/:id", pc.ShowUpdate)
 		postGroup.POST("/update", pc.Update)
+
+		postGroup.GET("/delete/:id", pc.Delete)
 	}
 
 	r.NoRoute(NoRouteHandler)

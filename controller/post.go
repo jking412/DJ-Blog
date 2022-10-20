@@ -31,9 +31,16 @@ type PostDetailResp struct {
 
 type PostUpdateReq struct {
 	Id      uint64
+	Title   string
+	Tag     string
 	Content string
-	Likes   uint64
-	Stared  bool
+}
+
+type PostUpdateResp struct {
+	Id      uint64
+	Title   string
+	Tag     string
+	Content string
 }
 
 func (pc *PostController) Index(c *gin.Context) {
@@ -60,6 +67,10 @@ func (pc *PostController) Index(c *gin.Context) {
 }
 
 func (pc *PostController) Create(c *gin.Context) {
+	c.HTML(http.StatusOK, "create", gin.H{})
+}
+
+func (pc *PostController) Store(c *gin.Context) {
 	Title := c.PostForm("title")
 	Tag := c.PostForm("tag")
 	Content := c.PostForm("content")
@@ -103,24 +114,44 @@ func (pc *PostController) Detail(c *gin.Context) {
 	})
 }
 
+func (pc *PostController) ShowUpdate(c *gin.Context) {
+	Id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		logrus.Warn("Request param id is not a number")
+		c.HTML(http.StatusBadRequest, "error", gin.H{})
+	}
+	post := &model.Post{}
+	post.Id = Id
+	post, _ = post.GetPostById()
+	postUpdateResp := &PostUpdateResp{
+		Id:      post.Id,
+		Title:   post.Title,
+		Tag:     post.Tag,
+		Content: post.Content,
+	}
+	c.HTML(http.StatusOK, "update", gin.H{
+		"post": postUpdateResp,
+	})
+}
+
 func (pc *PostController) Update(c *gin.Context) {
 	Id, _ := strconv.ParseUint(c.PostForm("id"), 10, 64)
+	Title := c.PostForm("title")
+	Tag := c.PostForm("tag")
 	Content := c.PostForm("content")
-	Likes, _ := strconv.ParseUint(c.PostForm("likes"), 10, 64)
-	Stared, _ := strconv.ParseBool(c.PostForm("stared"))
 	postUpdateReq := &PostUpdateReq{
 		Id:      Id,
+		Title:   Title,
+		Tag:     Tag,
 		Content: Content,
-		Likes:   Likes,
-		Stared:  Stared,
 	}
 	post := &model.Post{
 		BaseModel: model.BaseModel{
 			Id: postUpdateReq.Id,
 		},
+		Title:   postUpdateReq.Title,
+		Tag:     postUpdateReq.Tag,
 		Content: postUpdateReq.Content,
-		Likes:   postUpdateReq.Likes,
-		Stared:  postUpdateReq.Stared,
 	}
 	post.Update()
 	c.Redirect(http.StatusFound, "/post/"+strconv.FormatUint(post.Id, 10))
