@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    links:
+      - mysql
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: dj_blog
+    hostname: mysql

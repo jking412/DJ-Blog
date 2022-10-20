@@ -1,2 +1,6 @@
 time="2022-10-19T10:27:55+08:00" level=info msg="Logger initialized" func=DJ-Blog/pkg/logger.InitLogger file="D:/code/Goland/DJ-Blog/pkg/logger/logger.go:18"
 time="2022-10-19T10:27:55+08:00" level=info msg="Template loaded" func=DJ-Blog/pkg/template.InitTemplate file="D:/code/Goland/DJ-Blog/pkg/template/template.go:12"
+time="2022-10-20T09:39:27+08:00" level=info msg="Logger initialized" func=DJ-Blog/pkg/logger.InitLogger file="D:/code/Goland/DJ-Blog/pkg/logger/logger.go:19"
+time="2022-10-20T09:39:27+08:00" level=info msg="Database connected" func=DJ-Blog/pkg/database.InitDB file="D:/code/Goland/DJ-Blog/pkg/database/database.go:38"
+time="2022-10-20T09:39:27+08:00" level=info msg="Database migration success" func=DJ-Blog/boot.Initialize file="D:/code/Goland/DJ-Blog/boot/boot.go:22"
+time="2022-10-20T09:39:27+08:00" level=info msg="Template loaded" func=DJ-Blog/pkg/template.InitTemplate file="D:/code/Goland/DJ-Blog/pkg/template/template.go:18"
