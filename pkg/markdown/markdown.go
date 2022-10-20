@@ -2,6 +2,7 @@ package markdown
 
 import (
 	"bytes"
+	"github.com/sirupsen/logrus"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 )
@@ -12,6 +13,7 @@ func InitMarkDownParser() {
 	GoldMark = goldmark.New(
 		goldmark.WithExtensions(extension.Table, extension.GFM),
 	)
+	logrus.Info("Markdown parser initialized")
 }
 
 func ParseContent(content string) string {

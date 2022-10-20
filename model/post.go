@@ -12,6 +12,7 @@ type Post struct {
 	Content string `gorm:"column:content;type:longtext;not null"`
 	Likes   uint64 `gorm:"column:likes;default:0"`
 	Stared  bool   `gorm:"column:stared;default:false"`
+	UserId  uint64 `gorm:"column:user_id"`
 }
 
 func (p *Post) TableName() string {
