@@ -16,6 +16,7 @@ func Register(r *gin.Engine) {
 	postGroup := r.Group("/post")
 	{
 		postGroup.GET("/:id", pc.Detail)
+		postGroup.POST("/create", pc.Create)
 		postGroup.GET("/delete/:id", pc.Delete)
 		postGroup.POST("/update", pc.Update)
 	}

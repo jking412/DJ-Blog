@@ -16,6 +16,12 @@ type PostIndexResp struct {
 	request.PostBaseResp
 }
 
+type PostCreateReq struct {
+	Title   string
+	Tag     string
+	Content string
+}
+
 type PostDetailResp struct {
 	request.PostBaseResp
 	Content string
@@ -51,6 +57,24 @@ func (pc *PostController) Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "index", gin.H{
 		"posts": postIndexResp,
 	})
+}
+
+func (pc *PostController) Create(c *gin.Context) {
+	Title := c.PostForm("title")
+	Tag := c.PostForm("tag")
+	Content := c.PostForm("content")
+	postCreateReq := &PostCreateReq{
+		Title:   Title,
+		Tag:     Tag,
+		Content: Content,
+	}
+	post := &model.Post{
+		Title:   postCreateReq.Title,
+		Tag:     postCreateReq.Tag,
+		Content: postCreateReq.Content,
+	}
+	post.Create()
+	c.Redirect(http.StatusFound, "/")
 }
 
 func (pc *PostController) Detail(c *gin.Context) {
