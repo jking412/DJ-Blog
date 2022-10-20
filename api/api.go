@@ -2,6 +2,7 @@ package api
 
 import (
 	"DJ-Blog/controller"
+	"DJ-Blog/controller/middleware"
 	"DJ-Blog/pkg/sessionpkg"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,8 @@ func Register(r *gin.Engine) {
 
 	pc := &controller.PostController{}
 	uc := &controller.UserController{}
+
+	r.GET("/", pc.Index)
 
 	userGroup := r.Group("/user")
 	{
@@ -30,7 +33,7 @@ func Register(r *gin.Engine) {
 	}
 
 	postGroup := r.Group("/post")
-	//postGroup.Use(middleware.Auth())
+	postGroup.Use(middleware.Auth())
 	{
 		postGroup.GET("/:id", pc.Detail)
 
@@ -42,9 +45,6 @@ func Register(r *gin.Engine) {
 
 		postGroup.GET("/delete/:id", pc.Delete)
 	}
-
-	//r.Use(middleware.Auth())
-	r.GET("/", pc.Index)
 
 	r.NoRoute(NoRouteHandler)
 

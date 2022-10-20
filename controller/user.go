@@ -105,7 +105,7 @@ func (uc *UserController) GithubLoginCallback(c *gin.Context) {
 		"application/x-www-form-urlencoded",
 		strings.NewReader(fmt.Sprintf("client_id=%s&client_secret=%s&code=%s",
 			viperlib.GetString("github.clientId"),
-			viperlib.GetString(""),
+			viperlib.GetString("github.clientSecret"),
 			code)))
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
