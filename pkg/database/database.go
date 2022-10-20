@@ -19,12 +19,14 @@ func InitDB() {
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 			viperlib.GetString("database.mysql.username"),
 			viperlib.GetString("database.mysql.password"),
+			//viperlib.GetString("database.mysql.container_name"),
 			viperlib.GetString("database.mysql.host"),
 			viperlib.GetString("database.mysql.port"),
 			viperlib.GetString("database.mysql.dbname"))
 		DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 		if err != nil {
 			logrus.Error("Database connection failed. Database name: " + viperlib.GetString("database.mysql.dbname"))
+			logrus.Error("dsn " + dsn)
 			panic(err)
 		}
 	case "sqlite":

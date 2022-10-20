@@ -6,6 +6,7 @@
     <title>Title</title>
 </head>
 <body>
+    <a href="/user/logout">logout</a>
     {{range $index,$post := .posts}}
         {{$post.Id}}
         <br>
@@ -16,7 +17,11 @@
         {{$post.CreatedAt}}
         <br>
         {{$post.UpdatedAt}}
+    <a href="/post/{{$post.Id}}">{{$post.Title}}</a>
+    <a href="/post/update/{{$post.Id}}">edit</a>
+    <br>
     {{end}}
+
 </body>
 </html>
 {{end}}

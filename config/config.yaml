@@ -11,9 +11,9 @@ static:
 database:
   type: sqlite
   mysql:
-    host: localhost
+    host: mysql
     port: 3306
-    user: root
+    username: root
     password: 123456
     dbname: dj_blog
 
