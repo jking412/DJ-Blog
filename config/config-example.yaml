@@ -6,7 +6,7 @@ template:
     - ./views/front/*.html
 
 static:
-    path: ./static
+  path: ./static
 
 database:
   type: sqlite
@@ -22,3 +22,7 @@ database:
 
 log:
   path: logs/logs.log
+
+github:
+  clientId:
+  clientSecret:
