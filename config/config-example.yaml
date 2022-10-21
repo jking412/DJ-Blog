@@ -26,3 +26,9 @@ log:
 github:
   clientId:
   clientSecret:
+
+zinc:
+  username:
+  password:
+  endpoint:
+  indexName:

@@ -5,6 +5,7 @@ import (
 	"DJ-Blog/pkg/database"
 	"DJ-Blog/pkg/logger"
 	"DJ-Blog/pkg/markdown"
+	"DJ-Blog/pkg/search"
 	"DJ-Blog/pkg/sessionpkg"
 	"DJ-Blog/pkg/viperlib"
 	"github.com/sirupsen/logrus"
@@ -25,5 +26,9 @@ func Initialize() {
 	}
 
 	sessionpkg.InitSession()
+	search.InitZincClient()
+
+	createIndex()
+
 	markdown.InitMarkDownParser()
 }
