@@ -1,0 +1,23 @@
+{{define "search"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/post/search" method="post">
+        <label>
+            <input type="text" name="keyword">
+        </label>
+        <input type="submit" value="搜索">
+    </form>
+    {{range $index, $post := .posts}}
+        <div>
+            <h1>{{$post.Title}}</h1>
+            <p>{{$post.Id}}</p>
+        </div>
+    {{end}}
+</body>
+</html>
+{{end}}

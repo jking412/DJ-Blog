@@ -27,3 +27,9 @@ log:
 github:
   clientId:
   clientSecret:
+
+zinc:
+  username:
+  password:
+  endpoint: "http://localhost:4080"
+  indexName: "posts"
