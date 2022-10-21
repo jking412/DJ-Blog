@@ -30,5 +30,5 @@ github:
 zinc:
   username:
   password:
-  endpoint:
-  indexName:
+  endpoint: "http://localhost:4080"
+  indexName: "posts"
