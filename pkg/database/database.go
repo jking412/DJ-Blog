@@ -11,7 +11,7 @@ import (
 
 var DB *gorm.DB
 
-func InitDB() {
+func InitDB() error {
 	var err error
 	databaseType := viperlib.GetString("database.type")
 	switch databaseType {
@@ -27,14 +27,15 @@ func InitDB() {
 		if err != nil {
 			logrus.Error("Database connection failed. Database name: " + viperlib.GetString("database.mysql.dbname"))
 			logrus.Error("dsn " + dsn)
-			panic(err)
+			return err
 		}
 	case "sqlite":
 		DB, err = gorm.Open(sqlite.Open(viperlib.GetString("database.sqlite.dbname")), &gorm.Config{})
 		if err != nil {
 			logrus.Error("Database connection failed. Database path: " + viperlib.GetString("database.sqlite.path"))
-			panic(err)
+			return err
 		}
 	}
 	logrus.Info("Database connected")
+	return nil
 }

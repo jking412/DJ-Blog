@@ -9,12 +9,20 @@ import (
 	"DJ-Blog/pkg/sessionpkg"
 	"DJ-Blog/pkg/viperlib"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 func Initialize() {
 	viperlib.InitConfig()
 	logger.InitLogger()
-	database.InitDB()
+
+	for {
+		err := database.InitDB()
+		if err == nil {
+			break
+		}
+		time.Sleep(2 * time.Second)
+	}
 
 	err := database.DB.AutoMigrate(&model.User{},
 		&model.Post{})
