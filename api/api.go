@@ -16,6 +16,8 @@ func Register(r *gin.Engine) {
 	pc := &controller.PostController{}
 	uc := &controller.UserController{}
 
+	r.GET("/", pc.Index)
+
 	userGroup := r.Group("/user")
 	{
 		userGroup.GET("/register", uc.ShowRegister)
@@ -41,10 +43,11 @@ func Register(r *gin.Engine) {
 		postGroup.POST("/update", pc.Update)
 
 		postGroup.GET("/delete/:id", pc.Delete)
-	}
 
-	//r.Use(middleware.Auth())
-	r.GET("/", pc.Index)
+		postGroup.GET("/search", pc.ShowSearch)
+		postGroup.POST("/search", pc.Search)
+
+	}
 
 	r.NoRoute(NoRouteHandler)
 

@@ -3,6 +3,8 @@ package controller
 import (
 	"DJ-Blog/controller/request"
 	"DJ-Blog/model"
+	"DJ-Blog/pkg/search"
+	"DJ-Blog/pkg/sessionpkg"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -43,6 +45,11 @@ type PostUpdateResp struct {
 	Content string
 }
 
+type PostSearchResp struct {
+	Id    uint64
+	Title string
+}
+
 func (pc *PostController) Index(c *gin.Context) {
 	post := &model.Post{}
 	posts, _ := post.GetAllPosts()
@@ -79,10 +86,12 @@ func (pc *PostController) Store(c *gin.Context) {
 		Tag:     Tag,
 		Content: Content,
 	}
+	userId := sessionpkg.GetUserId(c)
 	post := &model.Post{
 		Title:   postCreateReq.Title,
 		Tag:     postCreateReq.Tag,
 		Content: postCreateReq.Content,
+		UserId:  userId,
 	}
 	post.Create()
 	c.Redirect(http.StatusFound, "/")
@@ -167,4 +176,24 @@ func (pc *PostController) Delete(c *gin.Context) {
 	post.Id = id
 	post.DeletePostById()
 	c.Redirect(http.StatusFound, "/")
+}
+
+func (pc *PostController) ShowSearch(c *gin.Context) {
+	c.HTML(http.StatusOK, "search", gin.H{})
+}
+
+func (pc *PostController) Search(c *gin.Context) {
+	keyword := c.PostForm("keyword")
+	rs, _ := search.ZincCli.Query("posts", keyword)
+	var postSearchResp []PostSearchResp
+	for _, r := range rs.Hits.HitItems {
+		source := r.Source.(map[string]interface{})
+		postSearchResp = append(postSearchResp, PostSearchResp{
+			Id:    uint64(source["id"].(float64)),
+			Title: source["title"].(string),
+		})
+	}
+	c.HTML(http.StatusOK, "search", gin.H{
+		"posts": postSearchResp,
+	})
 }

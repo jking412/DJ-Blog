@@ -24,9 +24,10 @@ RUN go build -o main .
 ###################
 # 接下来创建一个小镜像
 ###################
-FROM scratch
+FROM ubuntu:latest
 
 COPY ./views /views
+COPY ./static /static
 
 # 从builder镜像中把/dist/app 拷贝到当前目录
 COPY --from=builder /build/main /
@@ -34,4 +35,6 @@ COPY --from=builder /build/main /
 EXPOSE 8000
 
 # 需要运行的命令
+RUN apt-get -qq update --fix-missing \
+    && apt-get -qq install -y --no-install-recommends ca-certificates curl
 ENTRYPOINT ["/main"]

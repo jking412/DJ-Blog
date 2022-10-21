@@ -4,7 +4,7 @@ server:
 template:
   path:
     - ./views/front/*.html
-
+    - ./views/example/*.html
 static:
   path: ./static
 
@@ -26,3 +26,9 @@ log:
 github:
   clientId:
   clientSecret:
+
+zinc:
+  username:
+  password:
+  endpoint: "http://localhost:4080"
+  indexName: "posts"
