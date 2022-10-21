@@ -5,11 +5,13 @@
     <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../../static/css/pure-min.css">
+    <link rel="stylesheet" href="../../static/css/blog-style.css">
+    <link rel="stylesheet" href="../../static/css/grids-responsive-min.css">
 </head>
 <body>
 <div id="layout" class="pure-g">    
     <div class="sidebar pure-u-1 pure-u-md-1-4">
-        <div class="header">
+        <div class="header" >
             <h1 class="brand-title">Welcome to DJ-Blog</h1>
             <h2 class="brand-tagline">Share your life and fun</h2>
     
@@ -22,6 +24,7 @@
             </nav>
         </div>
     </div>
+
     <div class="content pure-u-1 pure-u-md-3-4">
         <div class="nav-container">
             <nav class="home-menu pure-menu pure-menu-horizontal">
@@ -42,38 +45,18 @@
             <div class="posts">
                 <h1 class="content-subhead">recent posts</h1>
 
+                {{range $index, $post := .posts}}
                 <section class="post">
                     <header class="post-header">
-                        <h2 class="post-title">post-title</h2>
+                        <h2 class="post-title">{{$post.Title}}</h2>
                     </header>
                     <div class="post-discription">
                         <p>
-                            欢迎大家来到DJ-Blog，在这里你可以记录你的日常生活，分享你的快乐。
+                            {{$post.Content}}
                         </p>
                     </div>
                 </section>
-
-                <section class="post">
-                    <header class="post-header">
-                        <h2 class="post-title">post-title</h2>
-                    </header>
-                    <div class="post-discription">
-                        <p>
-                            欢迎大家来到DJ-Blog，在这里你可以记录你的日常生活，分享你的快乐。
-                        </p>
-                    </div>
-                </section>
-
-                <section class="post">
-                    <header class="post-header">
-                        <h2 class="post-title">post-title</h2>
-                    </header>
-                    <div class="post-discription">
-                        <p>
-                            欢迎大家来到DJ-Blog，在这里你可以记录你的日常生活，分享你的快乐。
-                        </p>
-                    </div>
-                </section>
+                {{end}}
             </div>
         </div>
         <div class="footer">
