@@ -101,12 +101,18 @@ func (uc *UserController) GithubLogin(c *gin.Context) {
 func (uc *UserController) GithubLoginCallback(c *gin.Context) {
 	code := c.Query("code")
 
-	resp, _ := http.Post("https://github.com/login/oauth/access_token",
+	resp, err := http.Post("https://github.com/login/oauth/access_token",
 		"application/x-www-form-urlencoded",
 		strings.NewReader(fmt.Sprintf("client_id=%s&client_secret=%s&code=%s",
 			viperlib.GetString("github.clientId"),
 			viperlib.GetString("github.clientSecret"),
 			code)))
+	logrus.Info(code)
+	logrus.Info(viperlib.GetString("github.clientId"))
+	logrus.Info(viperlib.GetString("github.clientSecret"))
+	logrus.Info(err)
+	fmt.Println(err)
+	fmt.Println(resp.Body)
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 	var token oauth2.Token
@@ -116,6 +122,7 @@ func (uc *UserController) GithubLoginCallback(c *gin.Context) {
 			token.AccessToken = v
 		}
 	}
+	logrus.Info(token.AccessToken)
 	req, _ := http.NewRequest("GET", "https://api.github.com/user", nil)
 	req.Header.Set("Authorization", "Bearer "+token.AccessToken)
 	resp, _ = http.DefaultClient.Do(req)
@@ -140,7 +147,6 @@ func (uc *UserController) GithubLoginCallback(c *gin.Context) {
 		}
 	}
 
-	var err error
 	if user, err = user.GetUserByUsername(); err != nil {
 		logrus.Warn("获取用户信息失败")
 		c.HTML(http.StatusInternalServerError, "error", gin.H{})
