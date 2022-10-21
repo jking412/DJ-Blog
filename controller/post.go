@@ -4,6 +4,7 @@ import (
 	"DJ-Blog/controller/request"
 	"DJ-Blog/model"
 	"DJ-Blog/pkg/search"
+	"DJ-Blog/pkg/sessionpkg"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -85,10 +86,12 @@ func (pc *PostController) Store(c *gin.Context) {
 		Tag:     Tag,
 		Content: Content,
 	}
+	userId := sessionpkg.GetUserId(c)
 	post := &model.Post{
 		Title:   postCreateReq.Title,
 		Tag:     postCreateReq.Tag,
 		Content: postCreateReq.Content,
+		UserId:  userId,
 	}
 	post.Create()
 	c.Redirect(http.StatusFound, "/")

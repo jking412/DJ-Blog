@@ -16,8 +16,8 @@ func Initialize() {
 	logger.InitLogger()
 	database.InitDB()
 
-	err := database.DB.AutoMigrate(&model.Post{},
-		&model.User{})
+	err := database.DB.AutoMigrate(&model.User{},
+		&model.Post{})
 	if err != nil {
 		logrus.Error("Database migration failed")
 		panic(err)
