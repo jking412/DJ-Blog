@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../../static/css/pure-min.css">
-    <link rel="stylesheet" href="../../static/css/blog-style.css">
-    <link rel="stylesheet" href="../../static/css/grids-responsive-min.css">
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/blog-style.css">
+    <link rel="stylesheet" href="/static/css/grids-responsive-min.css">
     <style>
         div.nav-container {
             text-align:right;
@@ -15,9 +15,6 @@
         div.footer {
             position:fixed;
             bottom:0;
-        }
-        div.posts {
-            border-bottom:1px solid rgb(246, 239, 239);
         }
         div.posts p.footer {
             text-align:left;
@@ -77,16 +74,15 @@
                 <section class="post">
 
                     <header class="post-header">
-                        <h2 class="post-title">{{$post.Title}}</h2>
-                        <img src="https://pic3.zhimg.com/v2-ab5c6c7643d5bedeece7fccb5d7ec2a1_r.jpg" alt="post image">
+                        <h2 class="post-title" onclick="showPost('{{$post.Id}}')">{{$post.Title}}</h2>
+                        <img src="{{$post.AvatarUrl}}" alt="post image">
                     </header>
-                    <div class="post-discription">
-                        <p>
-                            {{$post.Content}}
-                        </p>
+                    {{$post.Tag}}
+                    <div class="post-description">
                     </div>
                 </section>
                 <p class="footer">By {{$post.Author}}</p>
+                <hr>
                 {{end}}
             </div>
         </div>
@@ -101,7 +97,11 @@
     </div>
 
 </div>
-
+<script>
+    function showPost(id) {
+        window.location.href = "/post/" + id;
+    }
+</script>
 </body>
 </html>
 {{end}}
