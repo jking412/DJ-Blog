@@ -226,15 +226,9 @@ func (zc *ZincClient) IsExistIndex(indexName string) bool {
 
 func (zc *ZincClient) Query(indexName string, keyword string) (*QueryResult, error) {
 	resp, err := zc.request().SetBody(map[string]interface{}{
-		"search_type": "fuzzy",
+		"search_type": "wildcard",
 		"query": map[string]interface{}{
-			"term": keyword,
-		},
-		"highlight": map[string]interface{}{
-			"fields": map[string]interface{}{
-				"title":   map[string]interface{}{},
-				"content": map[string]interface{}{},
-			},
+			"term": "*" + keyword + "*",
 		},
 		"from":        0,
 		"max_results": 10,
@@ -265,7 +259,7 @@ func (zc *ZincClient) PutDoc(indexName string, id uint64, data interface{}) bool
 	return true
 }
 
-func (zc *ZincClient) DelDoc(indexName string, id uint64) bool {
+func (zc *ZincClient) DeleteDoc(indexName string, id uint64) bool {
 	resp, err := zc.request().Delete(fmt.Sprintf("/api/%s/_doc/%d", indexName, id))
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		logrus.Warn("del doc failed", err)

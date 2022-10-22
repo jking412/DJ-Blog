@@ -20,12 +20,12 @@ idea:
 - [ ] 按钮导出markdown
 
 # 部署说明
-## 常规部署
+## 常规部署(不推荐)
 > 1. 配置文件在config/config.yaml，配置好相关参数
-> 2. 日志文件如果在文件夹下，需要先创建好文件夹
+> 2. 下载Zinc，如果使用mysql要先配置好mysql
 > 3. 运行`go mod download`下载依赖
 > 4. 运行`go run main.go`启动项目
 
-## Docker部署
+## Docker部署(推荐)
 > 1. 修改docker-compose.yaml中配置文件的挂载位置
 > 2. 运行`docker-compose up -d`启动项目
