@@ -32,6 +32,15 @@ func (p *Post) GetAllPosts() ([]Post, error) {
 	return posts, nil
 }
 
+func (p *Post) GetUserId() (uint64, error) {
+	var post Post
+	if err := database.DB.Where("id = ?", p.Id).First(&post).Error; err != nil {
+		logrus.Warn("Get user id failed")
+		return 0, err
+	}
+	return post.UserId, nil
+}
+
 func (p *Post) Create() error {
 	if err := database.DB.Create(p).Error; err != nil {
 		logrus.Warn("Create post failed")

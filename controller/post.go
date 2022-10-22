@@ -93,7 +93,7 @@ func (pc *PostController) Store(c *gin.Context) {
 		Tag:     postCreateReq.Tag,
 		Content: postCreateReq.Content,
 		UserId:  userId,
-		Author: sessionpkg.GetUsername(c),
+		Author:  sessionpkg.GetUsername(c),
 	}
 	post.Create()
 	c.Redirect(http.StatusFound, "/")
@@ -104,6 +104,7 @@ func (pc *PostController) Detail(c *gin.Context) {
 	if err != nil {
 		logrus.Warn("Request param id is not a number")
 		c.HTML(http.StatusBadRequest, "error", gin.H{})
+		return
 	}
 	post := &model.Post{}
 	post.Id = id
@@ -127,14 +128,19 @@ func (pc *PostController) Detail(c *gin.Context) {
 }
 
 func (pc *PostController) ShowUpdate(c *gin.Context) {
-	Id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		logrus.Warn("Request param id is not a number")
 		c.HTML(http.StatusBadRequest, "error", gin.H{})
+		return
 	}
 	post := &model.Post{}
-	post.Id = Id
+	post.Id = id
 	post, _ = post.GetPostById()
+	if post.UserId != sessionpkg.GetUserId(c) {
+		c.HTML(http.StatusUnauthorized, "error", gin.H{})
+		return
+	}
 	postUpdateResp := &PostUpdateResp{
 		Id:      post.Id,
 		Title:   post.Title,
@@ -147,12 +153,21 @@ func (pc *PostController) ShowUpdate(c *gin.Context) {
 }
 
 func (pc *PostController) Update(c *gin.Context) {
-	Id, _ := strconv.ParseUint(c.PostForm("id"), 10, 64)
+	id, _ := strconv.ParseUint(c.PostForm("id"), 10, 64)
+	userId, _ := (&model.Post{
+		BaseModel: model.BaseModel{
+			Id: id,
+		},
+	}).GetUserId()
+	if userId != sessionpkg.GetUserId(c) {
+		c.HTML(http.StatusUnauthorized, "error", gin.H{})
+		return
+	}
 	Title := c.PostForm("title")
 	Tag := c.PostForm("tag")
 	Content := c.PostForm("content")
 	postUpdateReq := &PostUpdateReq{
-		Id:      Id,
+		Id:      id,
 		Title:   Title,
 		Tag:     Tag,
 		Content: Content,
@@ -171,9 +186,19 @@ func (pc *PostController) Update(c *gin.Context) {
 
 func (pc *PostController) Delete(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	userId, _ := (&model.Post{
+		BaseModel: model.BaseModel{
+			Id: id,
+		},
+	}).GetUserId()
+	if userId != sessionpkg.GetUserId(c) {
+		c.HTML(http.StatusUnauthorized, "error", gin.H{})
+		return
+	}
 	if err != nil {
 		logrus.Warn("Request param id is not a number")
 		c.HTML(http.StatusBadRequest, "error", gin.H{})
+		return
 	}
 	post := &model.Post{}
 	post.Id = id
