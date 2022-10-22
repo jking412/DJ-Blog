@@ -2,9 +2,6 @@ package main
 
 import (
 	"DJ-Blog/boot"
-	"DJ-Blog/model"
-	"DJ-Blog/pkg/database"
-	"DJ-Blog/pkg/search"
 	"testing"
 )
 
@@ -21,22 +18,22 @@ func TestMain(m *testing.M) {
 //	fmt.Println(query)
 //}
 
-func TestTemp(t *testing.T) {
-	post := &model.Post{}
-	database.DB.First(&post)
-	dataMap := map[string]interface{}{
-		"id":         post.Id,
-		"title":      "我也不知道中文测试自己，来吧，ok",
-		"tag":        post.Tag,
-		"content":    post.Content,
-		"created_at": post.CreatedAt,
-		"updated_at": post.UpdatedAt,
-		"likes":      post.Likes,
-		"stared":     post.Stared,
-		"user_id":    post.UserId,
-	}
-	search.ZincCli.PutDoc("posts", 1, dataMap)
-}
+//func TestTemp(t *testing.T) {
+//	post := &model.Post{}
+//	database.DB.First(&post)
+//	dataMap := map[string]interface{}{
+//		"id":         post.Id,
+//		"title":      "我也不知道中文测试自己，来吧，ok",
+//		"tag":        post.Tag,
+//		"content":    post.Content,
+//		"created_at": post.CreatedAt,
+//		"updated_at": post.UpdatedAt,
+//		"likes":      post.Likes,
+//		"stared":     post.Stared,
+//		"user_id":    post.UserId,
+//	}
+//	search.ZincCli.PutDoc("posts", 1, dataMap)
+//}
 
 //func TestMarkdown(t *testing.T) {
 //	file, _ := os.OpenFile("test.md", os.O_RDONLY, os.ModePerm)

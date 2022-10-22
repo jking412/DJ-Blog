@@ -64,6 +64,7 @@ func (pc *PostController) Index(c *gin.Context) {
 				UpdatedAt: p.UpdatedAt,
 				Title:     p.Title,
 				Tag:       p.Tag,
+				Author:    p.Author,
 			},
 		})
 	}
@@ -92,6 +93,7 @@ func (pc *PostController) Store(c *gin.Context) {
 		Tag:     postCreateReq.Tag,
 		Content: postCreateReq.Content,
 		UserId:  userId,
+		Author: sessionpkg.GetUsername(c),
 	}
 	post.Create()
 	c.Redirect(http.StatusFound, "/")
@@ -113,6 +115,7 @@ func (pc *PostController) Detail(c *gin.Context) {
 			UpdatedAt: post.UpdatedAt,
 			Title:     post.Title,
 			Tag:       post.Tag,
+			Author:    sessionpkg.GetUsername(c),
 		},
 		Content: post.Content,
 		Likes:   post.Likes,

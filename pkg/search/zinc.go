@@ -265,7 +265,7 @@ func (zc *ZincClient) PutDoc(indexName string, id uint64, data interface{}) bool
 	return true
 }
 
-func (zc *ZincClient) DelDoc(indexName string, id uint64) bool {
+func (zc *ZincClient) DeleteDoc(indexName string, id uint64) bool {
 	resp, err := zc.request().Delete(fmt.Sprintf("/api/%s/_doc/%d", indexName, id))
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		logrus.Warn("del doc failed", err)

@@ -61,6 +61,7 @@ func (uc *UserController) Register(c *gin.Context) {
 		return
 	}
 	sessionpkg.SetSession("userId", user.Id, sessions.Default(c), sessions.Options{})
+	sessionpkg.SetSession("username", user.Username, sessions.Default(c), sessions.Options{})
 	c.Redirect(http.StatusFound, "/user/login")
 }
 
@@ -91,6 +92,7 @@ func (uc *UserController) Login(c *gin.Context) {
 		return
 	}
 	sessionpkg.SetSession("userId", user.Id, sessions.Default(c), sessions.Options{})
+	sessionpkg.SetSession("username", user.Username, sessions.Default(c), sessions.Options{})
 	c.Redirect(http.StatusFound, "/")
 }
 
@@ -153,12 +155,14 @@ func (uc *UserController) GithubLoginCallback(c *gin.Context) {
 		return
 	}
 	sessionpkg.SetSession("userId", user.Id, sessions.Default(c), sessions.Options{})
+	sessionpkg.SetSession("username", user.Username, sessions.Default(c), sessions.Options{})
 	c.Redirect(http.StatusFound, "/")
 }
 
 func (uc *UserController) Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Delete("userId")
+	session.Delete("username")
 	session.Save()
 	c.Redirect(http.StatusFound, "/user/login")
 }

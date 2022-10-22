@@ -8,4 +8,5 @@ type PostBaseResp struct {
 	UpdatedAt time.Time
 	Title     string
 	Tag       string
+	Author    string
 }
