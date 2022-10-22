@@ -5,6 +5,7 @@ template:
   path:
     - ./views/front/*.html
     - ./views/example/*.html
+
 static:
   path: ./static
 

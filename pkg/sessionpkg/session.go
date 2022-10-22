@@ -1,6 +1,7 @@
 package sessionpkg
 
 import (
+	"DJ-Blog/model"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -14,26 +15,31 @@ func InitSession() {
 	logrus.Info("Session init success")
 }
 
-func GetUserId(c *gin.Context) uint64 {
+func GetUser(c *gin.Context) *model.User {
 	session := sessions.Default(c)
 	userId := session.Get("userId")
-	if userId == nil {
-		return 0
-	}
-	return userId.(uint64)
-}
-
-func GetUsername(c *gin.Context) string {
-	session := sessions.Default(c)
 	username := session.Get("username")
-	if username == nil {
-		return ""
+	userAvatarUrl := session.Get("userAvatarUrl")
+	if userId == nil || username == nil || userAvatarUrl == nil {
+		return nil
 	}
-	return username.(string)
+	user := &model.User{
+		BaseModel: model.BaseModel{
+			Id: userId.(uint64),
+		},
+		Username:  username.(string),
+		AvatarUrl: userAvatarUrl.(string),
+	}
+	if user == nil {
+		return nil
+	}
+	return user
 }
 
-func SetSession(key string, value interface{}, session sessions.Session, options sessions.Options) {
-	session.Set(key, value)
+func SetSession(user *model.User, session sessions.Session, options sessions.Options) {
+	session.Set("userId", user.Id)
+	session.Set("username", user.Username)
+	session.Set("userAvatarUrl", user.AvatarUrl)
 	if options == (sessions.Options{}) {
 		options = sessions.Options{
 			Path:     "/",
@@ -47,6 +53,5 @@ func SetSession(key string, value interface{}, session sessions.Session, options
 
 func FlushSession(c *gin.Context) {
 	session := sessions.Default(c)
-	SetSession("userId", GetUserId(c), session, sessions.Options{})
-	SetSession("username", GetUsername(c), session, sessions.Options{})
+	SetSession(GetUser(c), session, sessions.Options{})
 }

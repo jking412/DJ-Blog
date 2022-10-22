@@ -13,6 +13,8 @@ services:
       - "8000:8000"
   mysql:
     image: mysql:latest
+    volumes:
+      - "D:/DJ-Blog/mysql:/var/lib/mysql"
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: dj_blog

@@ -16,6 +16,7 @@ type PostController struct {
 
 type PostIndexResp struct {
 	request.PostBaseResp
+	AvatarUrl string
 }
 
 type PostCreateReq struct {
@@ -57,6 +58,11 @@ func (pc *PostController) Index(c *gin.Context) {
 	var postIndexResp []PostIndexResp
 
 	for _, p := range posts {
+		user, _ := (&model.User{
+			BaseModel: model.BaseModel{
+				Id: p.UserId,
+			},
+		}).GetUserById()
 		postIndexResp = append(postIndexResp, PostIndexResp{
 			PostBaseResp: request.PostBaseResp{
 				Id:        p.Id,
@@ -66,6 +72,7 @@ func (pc *PostController) Index(c *gin.Context) {
 				Tag:       p.Tag,
 				Author:    p.Author,
 			},
+			AvatarUrl: user.AvatarUrl,
 		})
 	}
 
@@ -87,13 +94,13 @@ func (pc *PostController) Store(c *gin.Context) {
 		Tag:     Tag,
 		Content: Content,
 	}
-	userId := sessionpkg.GetUserId(c)
+	user := sessionpkg.GetUser(c)
 	post := &model.Post{
 		Title:   postCreateReq.Title,
 		Tag:     postCreateReq.Tag,
 		Content: postCreateReq.Content,
-		UserId:  userId,
-		Author:  sessionpkg.GetUsername(c),
+		UserId:  user.Id,
+		Author:  user.Username,
 	}
 	post.Create()
 	c.Redirect(http.StatusFound, "/")
@@ -116,7 +123,7 @@ func (pc *PostController) Detail(c *gin.Context) {
 			UpdatedAt: post.UpdatedAt,
 			Title:     post.Title,
 			Tag:       post.Tag,
-			Author:    sessionpkg.GetUsername(c),
+			Author:    post.Author,
 		},
 		Content: post.Content,
 		Likes:   post.Likes,
@@ -137,7 +144,7 @@ func (pc *PostController) ShowUpdate(c *gin.Context) {
 	post := &model.Post{}
 	post.Id = id
 	post, _ = post.GetPostById()
-	if post.UserId != sessionpkg.GetUserId(c) {
+	if post.UserId != sessionpkg.GetUser(c).Id {
 		c.HTML(http.StatusUnauthorized, "error", gin.H{})
 		return
 	}
@@ -159,7 +166,7 @@ func (pc *PostController) Update(c *gin.Context) {
 			Id: id,
 		},
 	}).GetUserId()
-	if userId != sessionpkg.GetUserId(c) {
+	if userId != sessionpkg.GetUser(c).Id {
 		c.HTML(http.StatusUnauthorized, "error", gin.H{})
 		return
 	}
@@ -191,7 +198,7 @@ func (pc *PostController) Delete(c *gin.Context) {
 			Id: id,
 		},
 	}).GetUserId()
-	if userId != sessionpkg.GetUserId(c) {
+	if userId != sessionpkg.GetUser(c).Id {
 		c.HTML(http.StatusUnauthorized, "error", gin.H{})
 		return
 	}
