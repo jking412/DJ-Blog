@@ -35,6 +35,6 @@ COPY --from=builder /build/main /
 EXPOSE 8000
 
 # 需要运行的命令
-RUN apt-get -qq update --fix-missing \
-    && apt-get -qq install -y --no-install-recommends ca-certificates curl
+# RUN apt-get -qq update --fix-missing \
+#     && apt-get -qq install -y --no-install-recommends ca-certificates curl
 ENTRYPOINT ["/main"]

@@ -33,10 +33,6 @@ func Register(r *gin.Engine) {
 	}
 
 	postGroup := r.Group("/post")
-<<<<<<< HEAD
-	postGroup.Use(middleware.Auth())
-=======
->>>>>>> origin/main
 	{
 		postGroup.GET("/:id", pc.Detail)
 
