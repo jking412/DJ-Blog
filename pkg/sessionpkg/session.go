@@ -23,6 +23,15 @@ func GetUserId(c *gin.Context) uint64 {
 	return userId.(uint64)
 }
 
+func GetUsername(c *gin.Context) string {
+	session := sessions.Default(c)
+	username := session.Get("username")
+	if username == nil {
+		return ""
+	}
+	return username.(string)
+}
+
 func SetSession(key string, value interface{}, session sessions.Session, options sessions.Options) {
 	session.Set(key, value)
 	if options == (sessions.Options{}) {
@@ -39,4 +48,5 @@ func SetSession(key string, value interface{}, session sessions.Session, options
 func FlushSession(c *gin.Context) {
 	session := sessions.Default(c)
 	SetSession("userId", GetUserId(c), session, sessions.Options{})
+	SetSession("username", GetUsername(c), session, sessions.Options{})
 }

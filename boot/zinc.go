@@ -56,6 +56,11 @@ func createIndex() {
 			Index: true,
 			Store: true,
 		},
+		"author": &search.ZincIndexProperty{
+			Type:  "keyword",
+			Index: true,
+			Store: true,
+		},
 		"user_id": &search.ZincIndexProperty{
 			Type:  "numeric",
 			Index: true,
