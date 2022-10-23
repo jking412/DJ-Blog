@@ -1,6 +1,9 @@
 package request
 
-import "time"
+import (
+	"github.com/thedevsaddam/govalidator"
+	"time"
+)
 
 type PostBaseResp struct {
 	Id        uint64
@@ -17,9 +20,9 @@ type PostIndexResp struct {
 }
 
 type PostCreateReq struct {
-	Title   string
+	Title   string `valid:"title"`
 	Tag     string
-	Content string
+	Content string `valid:"content"`
 }
 
 type PostDetailResp struct {
@@ -31,9 +34,9 @@ type PostDetailResp struct {
 
 type PostUpdateReq struct {
 	Id      uint64
-	Title   string
+	Title   string `valid:"title"`
 	Tag     string
-	Content string
+	Content string `valid:"content"`
 }
 
 type PostUpdateResp struct {
@@ -46,4 +49,29 @@ type PostUpdateResp struct {
 type PostSearchResp struct {
 	Id    uint64
 	Title string
+}
+
+func ValidatePost(data interface{}) map[string][]string {
+	rule := govalidator.MapData{
+		"title":   []string{"required"},
+		"content": []string{"required"},
+	}
+
+	msg := govalidator.MapData{
+		"title": []string{
+			"required:标题为必填项",
+		},
+		"content": []string{
+			"required:内容为必填项",
+		},
+	}
+
+	opts := govalidator.Options{
+		Data:          data,
+		Rules:         rule,
+		TagIdentifier: "valid",
+		Messages:      msg,
+	}
+
+	return govalidator.New(opts).ValidateStruct()
 }

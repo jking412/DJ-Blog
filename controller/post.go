@@ -57,6 +57,14 @@ func (pc *PostController) Store(c *gin.Context) {
 		Tag:     Tag,
 		Content: Content,
 	}
+	errs := request.ValidatePost(postCreateReq)
+	if len(errs) > 0 {
+		logrus.Warn("Request param is not valid", errs)
+		c.HTML(http.StatusBadRequest, "error", gin.H{
+			"errors": errs,
+		})
+		return
+	}
 	user := sessionpkg.GetUser(c)
 	post := &model.Post{
 		Title:   postCreateReq.Title,
@@ -141,6 +149,14 @@ func (pc *PostController) Update(c *gin.Context) {
 		Title:   Title,
 		Tag:     Tag,
 		Content: Content,
+	}
+	errs := request.ValidatePost(postUpdateReq)
+	if len(errs) > 0 {
+		logrus.Warn("Request param is not valid", errs)
+		c.HTML(http.StatusBadRequest, "error", gin.H{
+			"errors": errs,
+		})
+		return
 	}
 	post := &model.Post{
 		BaseModel: model.BaseModel{
