@@ -14,48 +14,11 @@ import (
 type PostController struct {
 }
 
-type PostIndexResp struct {
-	request.PostBaseResp
-	AvatarUrl string
-}
-
-type PostCreateReq struct {
-	Title   string
-	Tag     string
-	Content string
-}
-
-type PostDetailResp struct {
-	request.PostBaseResp
-	Content string
-	Likes   uint64
-	Stared  bool
-}
-
-type PostUpdateReq struct {
-	Id      uint64
-	Title   string
-	Tag     string
-	Content string
-}
-
-type PostUpdateResp struct {
-	Id      uint64
-	Title   string
-	Tag     string
-	Content string
-}
-
-type PostSearchResp struct {
-	Id    uint64
-	Title string
-}
-
 func (pc *PostController) Index(c *gin.Context) {
 	post := &model.Post{}
 	posts, _ := post.GetAllPosts()
 
-	var postIndexResp []PostIndexResp
+	var postIndexResp []request.PostIndexResp
 
 	for _, p := range posts {
 		user, _ := (&model.User{
@@ -63,7 +26,7 @@ func (pc *PostController) Index(c *gin.Context) {
 				Id: p.UserId,
 			},
 		}).GetUserById()
-		postIndexResp = append(postIndexResp, PostIndexResp{
+		postIndexResp = append(postIndexResp, request.PostIndexResp{
 			PostBaseResp: request.PostBaseResp{
 				Id:        p.Id,
 				CreatedAt: p.CreatedAt,
@@ -89,7 +52,7 @@ func (pc *PostController) Store(c *gin.Context) {
 	Title := c.PostForm("title")
 	Tag := c.PostForm("tag")
 	Content := c.PostForm("content")
-	postCreateReq := &PostCreateReq{
+	postCreateReq := &request.PostCreateReq{
 		Title:   Title,
 		Tag:     Tag,
 		Content: Content,
@@ -116,7 +79,7 @@ func (pc *PostController) Detail(c *gin.Context) {
 	post := &model.Post{}
 	post.Id = id
 	post, _ = post.GetPostById()
-	postDetailResp := &PostDetailResp{
+	postDetailResp := &request.PostDetailResp{
 		PostBaseResp: request.PostBaseResp{
 			Id:        post.Id,
 			CreatedAt: post.CreatedAt,
@@ -148,7 +111,7 @@ func (pc *PostController) ShowUpdate(c *gin.Context) {
 		c.HTML(http.StatusUnauthorized, "error", gin.H{})
 		return
 	}
-	postUpdateResp := &PostUpdateResp{
+	postUpdateResp := &request.PostUpdateResp{
 		Id:      post.Id,
 		Title:   post.Title,
 		Tag:     post.Tag,
@@ -173,7 +136,7 @@ func (pc *PostController) Update(c *gin.Context) {
 	Title := c.PostForm("title")
 	Tag := c.PostForm("tag")
 	Content := c.PostForm("content")
-	postUpdateReq := &PostUpdateReq{
+	postUpdateReq := &request.PostUpdateReq{
 		Id:      id,
 		Title:   Title,
 		Tag:     Tag,
@@ -220,10 +183,10 @@ func (pc *PostController) ShowSearch(c *gin.Context) {
 func (pc *PostController) Search(c *gin.Context) {
 	keyword := c.PostForm("keyword")
 	rs, _ := search.ZincCli.Query("posts", keyword)
-	var postSearchResp []PostSearchResp
+	var postSearchResp []request.PostSearchResp
 	for _, r := range rs.Hits.HitItems {
 		source := r.Source.(map[string]interface{})
-		postSearchResp = append(postSearchResp, PostSearchResp{
+		postSearchResp = append(postSearchResp, request.PostSearchResp{
 			Id:    uint64(source["id"].(float64)),
 			Title: source["title"].(string),
 		})
