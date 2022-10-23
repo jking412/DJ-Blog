@@ -87,6 +87,11 @@ func (pc *PostController) Detail(c *gin.Context) {
 	post := &model.Post{}
 	post.Id = id
 	post, _ = post.GetPostById()
+	user, _ := (&model.User{
+		BaseModel: model.BaseModel{
+			Id: post.UserId,
+		},
+	}).GetUserById()
 	postDetailResp := &request.PostDetailResp{
 		PostBaseResp: request.PostBaseResp{
 			Id:        post.Id,
@@ -96,9 +101,10 @@ func (pc *PostController) Detail(c *gin.Context) {
 			Tag:       post.Tag,
 			Author:    post.Author,
 		},
-		Content: post.Content,
-		Likes:   post.Likes,
-		Stared:  post.Stared,
+		AvatarUrl: user.AvatarUrl,
+		Content:   post.Content,
+		Likes:     post.Likes,
+		Stared:    post.Stared,
 	}
 	c.HTML(http.StatusOK, "detail", gin.H{
 		"post": postDetailResp,

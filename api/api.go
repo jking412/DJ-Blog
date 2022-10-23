@@ -6,13 +6,17 @@ import (
 	"DJ-Blog/pkg/sessionpkg"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"math/rand"
 	"net/http"
+	"time"
 )
 
 func Register(r *gin.Engine) {
 	r.Use(sessions.Sessions("DJ-Blog", sessionpkg.Store))
 
 	r.Any("/ping", Ping)
+
+	//r.GET("/test", Test)
 
 	pc := &controller.PostController{}
 	uc := &controller.UserController{}
@@ -58,6 +62,15 @@ func Register(r *gin.Engine) {
 func Ping(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"msg": "pong",
+	})
+}
+
+func Test(c *gin.Context) {
+	rand.Seed(time.Now().Unix())
+	msg := rand.Int()
+	time.Sleep(2 * time.Second)
+	c.HTML(http.StatusOK, "test", gin.H{
+		"msg": msg,
 	})
 }
 

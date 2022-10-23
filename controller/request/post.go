@@ -27,9 +27,10 @@ type PostCreateReq struct {
 
 type PostDetailResp struct {
 	PostBaseResp
-	Content string
-	Likes   uint64
-	Stared  bool
+	AvatarUrl string
+	Content   string
+	Likes     uint64
+	Stared    bool
 }
 
 type PostUpdateReq struct {
