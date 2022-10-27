@@ -52,18 +52,18 @@
     </div>
 
     <div class="content pure-u-1 pure-u-md-3-4">
-        <div class="nav-container ">
+        <div class="nav-container">
             <nav class="home-menu pure-menu pure-menu-horizontal">
-                <a class="pure-menu-heading" href="/static">
-                    <span class="title">我的博客</span>
+                <a class="pure-menu-heading" href="/">
+                    <span class="title"> my Blog</span>
                 </a>
-                <ul class="pure-menu-list clearfix" >
-                    <li class="pure-menu-item"><a href="/static" class="pure-menu-link">首页</a></li>
+                <ul class="pure-menu-list clearfix">
+                    <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
                     <li class="pure-menu-item"><a href="/archives" class="pure-menu-link">归档</a></li>
                     <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
                     <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
                     <li class="pure-menu-item"><a href="/page/aboutme" class="pure-menu-link">关于</a></li>
-                    <li class="pure-menu-item"><a href="/atom.xml" class="pure-menu-link">订阅</a></li>
+                    <li class="pure-menu-item"><a href="/rss" class="pure-menu-link">RSS</a></li>
                 </ul>
             </nav>
         </div>
@@ -74,8 +74,10 @@
                 <section class="post">
 
                     <header class="post-header">
+
                         <h2 class="post-title" onclick="showPost('{{$post.Id}}')">{{$post.Title}}</h2>
                         <img src="{{$post.AvatarUrl}}" alt="post image">
+
                     </header>
                     {{$post.Tag}}
                     <div class="post-description">

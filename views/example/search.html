@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search</title>
+<style>
+.layout {
+    display:grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr;
+    height:100%;
+} 
+.form {
+     
+    width:100%;
+    margin-top:120px;
+    background: rgb(255, 255, 255,0.5);
+    
+}
+#search {
+    font-size:20px;
+    width:70%;
+    border:1px solid rgb(124, 117, 117);
+    height:70px;
+    border-collapse: collapse;
+    background: rgb(255, 255, 255,0.5);
+    margin-right: 27px;
+}
+#button {
+    width:20%;
+    height:70px;
+    background-color:rgb(33, 65, 182);
+    color:white;
+    font-size:20px;
+
+}
+body {        
+        background-size:100%;
+        background-repeat: no-repeat;
+        background-image:url(../../img/4renzu.png);
+}
+</style>
+</head>
+<body>
+    <div class="layout">
+        <div>
+
+        </div>
+        <div class="form">
+            <form action="/example/search" method="post">
+                <input type="text" name="search" id="search" placeholder="search">
+                <input type="submit" value="search" id="button">
+            </form>
+        </div>
+        <div>
+
+        </div>
+</body>
+</html>
