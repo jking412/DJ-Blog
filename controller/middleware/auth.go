@@ -8,8 +8,8 @@ import (
 
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		userId := sessionpkg.GetUserId(c)
-		if userId == 0 {
+		user := sessionpkg.GetUser(c)
+		if user == nil {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"msg": "未登录",
 			})
