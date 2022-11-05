@@ -65,12 +65,35 @@ func Ping(c *gin.Context) {
 	})
 }
 
+type Habit struct {
+	Name    string
+	content string
+	time    int
+}
+
 func Test(c *gin.Context) {
 	rand.Seed(time.Now().Unix())
-	msg := rand.Int()
+	//msg := rand.Int()
 	time.Sleep(2 * time.Second)
+	habits := []Habit{
+		{
+			"1",
+			"2",
+			3,
+		},
+		{
+			"134",
+			"234",
+			3,
+		},
+		{
+			"213",
+			"2341",
+			3,
+		},
+	}
 	c.HTML(http.StatusOK, "test", gin.H{
-		"msg": msg,
+		"habits": habits,
 	})
 }
 

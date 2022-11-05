@@ -6,8 +6,13 @@
     <title>Title</title>
 </head>
 <body>
-    test
-    {{.msg}}
+
+    {{range .}}
+        <p>{{.}}</p>
+    {{end}}
+
+
+
     <a href="/test">this</a>
 </body>
 </html>

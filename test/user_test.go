@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/mock"
 	"testing"
 )
 
@@ -10,7 +9,7 @@ func TestSomethingWithPlaceholder(t *testing.T) {
 
 	testObj := new(MyMockObject)
 
-	testObj.On("DoSomething", mock.Anything).Return(true, nil)
+	testObj.On("DoSomething", 1).Return(false, nil)
 
 	// call the code we are testing
 	targetFuncThatDoesSomethingWithObj(testObj)
