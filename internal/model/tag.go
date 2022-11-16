@@ -1,10 +1,10 @@
 package model
 
 type TagModel struct {
-	Id   uint64 `gorm:"column:id;primaryKey;autoIncrement"`
-	Name string `gorm:"column:name;type:varchar(100);not null"`
+	Id   uint32 `gorm:"column:id;primaryKey;autoIncrement"`
+	Name string `gorm:"column:name"`
 }
 
 func (TagModel) TableName() string {
-	return "tag"
+	return "article_tag"
 }
