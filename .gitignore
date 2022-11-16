@@ -1,5 +1,4 @@
 .idea
-main_test.go
 dj_blog.db
 logs/logs.log
 config/config.yaml
