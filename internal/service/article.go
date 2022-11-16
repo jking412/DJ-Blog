@@ -12,6 +12,5 @@ type Article struct {
 }
 
 func NewArticleService() *ArticleService {
-
 	return new(ArticleService)
 }

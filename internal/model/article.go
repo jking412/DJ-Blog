@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"DJ-Blog/pkg/database"
+	"github.com/sirupsen/logrus"
+	"time"
+)
 
 type ArticleModel struct {
 	Id            uint32    `gorm:"column:id"`
@@ -15,4 +19,28 @@ type ArticleModel struct {
 
 func (a *ArticleModel) TableName() string {
 	return "article"
+}
+
+func (a *ArticleModel) Create() bool {
+	if err := database.DB.Create(a).Error; err != nil {
+		logrus.Warn("Create article failed", a)
+		return false
+	}
+	return true
+}
+
+func (a *ArticleModel) Delete() bool {
+	if err := database.DB.Create(a).Error; err != nil {
+		logrus.Warn("Delete article failed", a)
+		return false
+	}
+	return true
+}
+
+func (a *ArticleModel) Update() bool {
+	if err := database.DB.Updates(a).Error; err != nil {
+		logrus.Warn("Update article failed", a)
+		return false
+	}
+	return true
 }
