@@ -49,3 +49,8 @@ func SetUserId(id uint32, session sessions.Session, options sessions.Options) {
 	}
 	session.Save()
 }
+
+func ClearUserId(session sessions.Session) {
+	session.Delete("userId")
+	session.Save()
+}

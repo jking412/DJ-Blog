@@ -1,6 +1,9 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"DJ-Blog/internal/conf"
+	"github.com/spf13/viper"
+)
 
 var internalViper *viper.Viper
 
@@ -18,4 +21,5 @@ func Init(configPath ...string) {
 	}
 	internalViper.WatchConfig()
 	internalViper.AutomaticEnv()
+	conf.Init()
 }

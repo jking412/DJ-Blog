@@ -17,12 +17,27 @@ func Init() {
 
 		valueStr := value.(string)
 		validateField := strings.TrimPrefix(rule, "not_exist")
-		if validateField == "username" {
-			service.IsExistUser(valueStr)
+
+		if validateField == "username" && service.IsExistUser(valueStr) {
 			if message != "" {
 				return errors.New(message)
 			}
 			return fmt.Errorf("%v : %v已存在", validateField, valueStr)
+		}
+
+		return nil
+	})
+
+	govalidator.AddCustomRule("exist", func(field string, rule string, message string, value interface{}) error {
+
+		valueStr := value.(string)
+		validateField := strings.TrimPrefix(rule, "not_exist")
+
+		if validateField == "username" && !service.IsExistUser(valueStr) {
+			if message != "" {
+				return errors.New(message)
+			}
+			return fmt.Errorf("%v : %v不存在", validateField, valueStr)
 		}
 
 		return nil
