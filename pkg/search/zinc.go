@@ -1,7 +1,6 @@
 package search
 
 import (
-	"DJ-Blog/pkg/viperlib"
 	"encoding/json"
 	"fmt"
 	"github.com/go-resty/resty/v2"
@@ -184,10 +183,10 @@ var ZincCli *ZincClient
 
 func InitZincClient() {
 	ZincCli = &ZincClient{
-		ZincEndpoint: viperlib.GetString("zinc.endpoint"),
-		ZincUsername: viperlib.GetString("zinc.username"),
-		ZincPassword: viperlib.GetString("zinc.password"),
-		IndexName:    viperlib.GetString("zinc.indexName"),
+		ZincEndpoint: config.GetString("zinc.endpoint"),
+		ZincUsername: config.GetString("zinc.username"),
+		ZincPassword: config.GetString("zinc.password"),
+		IndexName:    config.GetString("zinc.indexName"),
 	}
 	logrus.Info("ZincClient init success")
 }

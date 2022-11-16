@@ -6,7 +6,6 @@ import (
 	"DJ-Blog/pkg/helper"
 	"DJ-Blog/pkg/oauth2"
 	"DJ-Blog/pkg/sessionpkg"
-	"DJ-Blog/pkg/viperlib"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-contrib/sessions"
@@ -107,12 +106,12 @@ func (uc *UserController) GithubLoginCallback(c *gin.Context) {
 	resp, err := http.Post("https://github.com/login/oauth/access_token",
 		"application/x-www-form-urlencoded",
 		strings.NewReader(fmt.Sprintf("client_id=%s&client_secret=%s&code=%s",
-			viperlib.GetString("github.clientId"),
-			viperlib.GetString("github.clientSecret"),
+			config.GetString("github.clientId"),
+			config.GetString("github.clientSecret"),
 			code)))
 	logrus.Info(code)
-	logrus.Info(viperlib.GetString("github.clientId"))
-	logrus.Info(viperlib.GetString("github.clientSecret"))
+	logrus.Info(config.GetString("github.clientId"))
+	logrus.Info(config.GetString("github.clientSecret"))
 	logrus.Info(err)
 	fmt.Println(err)
 	fmt.Println(resp.Body)

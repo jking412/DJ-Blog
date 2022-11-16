@@ -13,6 +13,6 @@ type ArticleModel struct {
 	UserId        uint32    `gorm:"column:user_id"`
 }
 
-func (ArticleModel) TableName() string {
+func (a *ArticleModel) TableName() string {
 	return "article"
 }

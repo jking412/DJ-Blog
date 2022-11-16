@@ -2,18 +2,17 @@ package boot
 
 import (
 	"DJ-Blog/model"
+	"DJ-Blog/pkg/config"
 	"DJ-Blog/pkg/database"
 	"DJ-Blog/pkg/logger"
-	"DJ-Blog/pkg/markdown"
 	"DJ-Blog/pkg/search"
 	"DJ-Blog/pkg/sessionpkg"
-	"DJ-Blog/pkg/viperlib"
 	"github.com/sirupsen/logrus"
 	"time"
 )
 
 func Initialize() {
-	viperlib.InitConfig()
+	config.InitConfig()
 	logger.InitLogger()
 
 	for {
@@ -35,8 +34,4 @@ func Initialize() {
 
 	sessionpkg.InitSession()
 	search.InitZincClient()
-
-	createIndex()
-
-	markdown.InitMarkDownParser()
 }
