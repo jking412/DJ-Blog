@@ -1,28 +1,26 @@
-//package controller
+package core
+
+import "github.com/gin-gonic/gin"
+
+type IUserController interface {
+	Login(c *gin.Context)
+	DoLogin(c *gin.Context)
+	Register(c *gin.Context)
+	DoRegister(c *gin.Context)
+	Logout(c *gin.Context)
+}
+
+type IGithubUserController interface {
+	GithubLogin(c *gin.Context)
+	GithubLoginCallback(c *gin.Context)
+}
+
 //
-//import (
-//	"DJ-Blog/internal/http/request"
-//	"DJ-Blog/model"
-//	"DJ-Blog/pkg/helper"
-//	"DJ-Blog/pkg/oauth2"
-//	"encoding/json"
-//	"fmt"
-//	"github.com/gin-contrib/sessions"
-//	"github.com/gin-gonic/gin"
-//	"github.com/sirupsen/logrus"
-//	"io/ioutil"
-//	"net/http"
-//	"strings"
-//)
-//
-//type UserController struct {
-//}
-//
-//func (uc *UserController) ShowRegister(c *gin.Context) {
+//func (uc *IUserController) ShowRegister(c *gin.Context) {
 //	c.HTML(http.StatusOK, "register", gin.H{})
 //}
 //
-//func (uc *UserController) Register(c *gin.Context) {
+//func (uc *IUserController) Register(c *gin.Context) {
 //	username, _ := c.GetPostForm("username")
 //	password, _ := c.GetPostForm("password")
 //	userRegisterReq := &request.UserRegisterReq{
@@ -59,11 +57,11 @@
 //	c.Redirect(http.StatusFound, "/user/login")
 //}
 //
-//func (uc *UserController) ShowLogin(c *gin.Context) {
+//func (uc *IUserController) ShowLogin(c *gin.Context) {
 //	c.HTML(http.StatusOK, "login", gin.H{})
 //}
 //
-//func (uc *UserController) Login(c *gin.Context) {
+//func (uc *IUserController) Login(c *gin.Context) {
 //	username, _ := c.GetPostForm("username")
 //	password, _ := c.GetPostForm("password")
 //	userLoginReq := &request.UserRegisterReq{
@@ -95,11 +93,11 @@
 //	c.Redirect(http.StatusFound, "/")
 //}
 //
-//func (uc *UserController) GithubLogin(c *gin.Context) {
+//func (uc *IUserController) GithubLogin(c *gin.Context) {
 //	c.Redirect(http.StatusFound, "https://github.com/login/oauth/authorize?client_id=5404b18fe048a5ef58a0")
 //}
 //
-//func (uc *UserController) GithubLoginCallback(c *gin.Context) {
+//func (uc *IUserController) GithubLoginCallback(c *gin.Context) {
 //	code := c.Query("code")
 //
 //	resp, err := http.Post("https://github.com/login/oauth/access_token",
@@ -157,7 +155,7 @@
 //	c.Redirect(http.StatusFound, "/")
 //}
 //
-//func (uc *UserController) Logout(c *gin.Context) {
+//func (uc *IUserController) Logout(c *gin.Context) {
 //	session := sessions.Default(c)
 //	session.Delete("user")
 //	session.Save()

@@ -7,14 +7,16 @@ import (
 	"net/http"
 )
 
-func Register(r *gin.Engine) {
+func RegisterRoutes(r *gin.Engine) {
 	r.Use(sessions.Sessions("DJ-Blog", session.Store))
 
 	r.Any("/ping", Ping)
 
-	//r.GET("/test", Test)
+	//userGroup := r.Group("/user")
+	//{
+	//
+	//}
 
-	//pc := &controller.PostController{}
 	//uc := &controller.UserController{}
 	//
 	//r.GET("/", pc.Index)
@@ -22,7 +24,7 @@ func Register(r *gin.Engine) {
 	//userGroup := r.Group("/user")
 	//{
 	//	userGroup.GET("/register", uc.ShowRegister)
-	//	userGroup.POST("/register", uc.Register)
+	//	userGroup.POST("/register", uc.RegisterRoutes)
 	//	userGroup.GET("/login", uc.ShowLogin)
 	//	userGroup.POST("/login", uc.Login)
 	//

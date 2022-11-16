@@ -1,15 +1,35 @@
-//package controller
-//
-//import (
-//	"DJ-Blog/internal/http/request"
-//	"DJ-Blog/model"
-//	"DJ-Blog/pkg/search"
-//	"github.com/gin-gonic/gin"
-//	"github.com/sirupsen/logrus"
-//	"net/http"
-//	"strconv"
-//)
-//
+package core
+
+import "github.com/gin-gonic/gin"
+
+type IArticleController interface {
+	Create(c *gin.Context)
+	DoCreate(c *gin.Context)
+
+	Delete(c *gin.Context)
+
+	Index(c *gin.Context)
+
+	Update(c *gin.Context)
+	DoUpdate(c *gin.Context)
+
+	ShowArticleDetail(c *gin.Context)
+	ShowArticleByTime(c *gin.Context)
+	ShowArticleByTag(c *gin.Context)
+	ShowByArticleCategory(c *gin.Context)
+
+	Search(c *gin.Context)
+}
+
+type ITagController interface {
+	ShowTags(c *gin.Context)
+}
+
+type ICategoryController interface {
+	ShowCategories(c *gin.Context)
+	ShowSpecificCategory(c *gin.Context)
+}
+
 //type PostController struct {
 //}
 //
