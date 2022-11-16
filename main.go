@@ -3,7 +3,6 @@ package main
 import (
 	"DJ-Blog/api"
 	"DJ-Blog/boot"
-	"DJ-Blog/pkg/template"
 	"DJ-Blog/pkg/viperlib"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -14,7 +13,7 @@ func main() {
 
 	r := gin.Default()
 
-	template.InitTemplate(r, viperlib.GetStrings("template.path")...)
+	//template.InitTemplate(r, viperlib.GetStrings("template.path")...)
 
 	api.Register(r)
 
