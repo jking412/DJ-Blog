@@ -1,9 +1,11 @@
 package session
 
 import (
+	"DJ-Blog/internal/service"
 	"DJ-Blog/pkg/config"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
@@ -16,43 +18,34 @@ func InitSession() {
 	logrus.Info("Session init success")
 }
 
-//func GetUser(c *gin.Context) *model.User {
-//	session := sessions.Default(c)
-//	userId := session.Get("userId")
-//	username := session.Get("username")
-//	userAvatarUrl := session.Get("userAvatarUrl")
-//	if userId == nil || username == nil || userAvatarUrl == nil {
-//		return nil
-//	}
-//	user := &model.User{
-//		BaseModel: model.BaseModel{
-//			Id: userId.(uint64),
-//		},
-//		Username:  username.(string),
-//		AvatarUrl: userAvatarUrl.(string),
-//	}
-//	if user == nil {
-//		return nil
-//	}
-//	return user
-//}
-//
-//func SetSession(user *model.User, session sessions.Session, options sessions.Options) {
-//	session.Set("userId", user.Id)
-//	session.Set("username", user.Username)
-//	session.Set("userAvatarUrl", user.AvatarUrl)
-//	if options == (sessions.Options{}) {
-//		options = sessions.Options{
-//			Path:     "/",
-//			MaxAge:   86400 * 7,
-//			HttpOnly: true,
-//		}
-//	}
-//	session.Options(options)
-//	session.Save()
-//}
-//
-//func FlushSession(c *gin.Context) {
-//	session := sessions.Default(c)
-//	SetSession(GetUser(c), session, sessions.Options{})
-//}
+func GetUser(c *gin.Context) *service.User {
+	session := sessions.Default(c)
+	userId := session.Get("userId")
+
+	if userId == nil {
+		return nil
+	}
+
+	var user *service.User
+	var ok bool
+	if user, ok = service.GetUserById(userId.(int32)); !ok {
+		logrus.Warn("session get user failed")
+		return nil
+	}
+
+	return user
+}
+
+func SetUserId(id uint32, session sessions.Session, options sessions.Options) {
+	session.Set("userId", id)
+	if options == (sessions.Options{}) {
+		session.Options(sessions.Options{
+			Path:     "/",
+			MaxAge:   86400 * 7,
+			HttpOnly: true,
+		})
+	} else {
+		session.Options(options)
+	}
+	session.Save()
+}

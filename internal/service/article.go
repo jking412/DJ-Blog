@@ -6,20 +6,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type ArticleService struct {
-}
-
 type Article struct {
 	model.ArticleModel
 	tags       []model.TagModel
 	categories []model.CategoryModel
 }
 
-func NewArticleService() *ArticleService {
-	return new(ArticleService)
-}
-
-func (a *ArticleService) GetArticleList() ([]Article, bool) {
+func GetArticleList() ([]Article, bool) {
 	articles := make([]Article, 0)
 	if err := database.DB.Model(&model.ArticleModel{}).Find(articles).Error; err != nil {
 		logrus.Warn("Get article list failed", err)
@@ -28,7 +21,7 @@ func (a *ArticleService) GetArticleList() ([]Article, bool) {
 	return articles, true
 }
 
-func (a *ArticleService) GetArticleById(id uint32) (*Article, bool) {
+func GetArticleById(id uint32) (*Article, bool) {
 	article := &Article{}
 	if err := database.DB.Model(&model.ArticleModel{}).Where("id = ?", id).First(article).Error; err != nil {
 		logrus.Warn("Get article failed", err)
@@ -37,7 +30,7 @@ func (a *ArticleService) GetArticleById(id uint32) (*Article, bool) {
 	return article, true
 }
 
-func (a *ArticleService) GetArticleByTitle(title string) (*Article, bool) {
+func GetArticleByTitle(title string) (*Article, bool) {
 	article := &Article{}
 	if err := database.DB.Model(&model.ArticleModel{}).Where("title = ?", title).First(&article).Error; err != nil {
 		logrus.Warn("Get article failed", err)
