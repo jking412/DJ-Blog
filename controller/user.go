@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"DJ-Blog/controller/request"
 	"DJ-Blog/model"
 	"DJ-Blog/pkg/helper"
 	"DJ-Blog/pkg/oauth2"
@@ -19,16 +20,6 @@ import (
 type UserController struct {
 }
 
-type UserRegisterReq struct {
-	Username string
-	Password string
-}
-
-type UserLoginReq struct {
-	Username string
-	Password string
-}
-
 func (uc *UserController) ShowRegister(c *gin.Context) {
 	c.HTML(http.StatusOK, "register", gin.H{})
 }
@@ -36,9 +27,15 @@ func (uc *UserController) ShowRegister(c *gin.Context) {
 func (uc *UserController) Register(c *gin.Context) {
 	username, _ := c.GetPostForm("username")
 	password, _ := c.GetPostForm("password")
-	userRegisterReq := &UserRegisterReq{
+	userRegisterReq := &request.UserRegisterReq{
 		Username: username,
 		Password: password,
+	}
+	errs := request.ValidateUserRegisterReq(userRegisterReq)
+	if len(errs) > 0 {
+		logrus.Warn("注册失败", errs)
+		c.HTML(http.StatusBadRequest, "error", gin.H{})
+		return
 	}
 	user := &model.User{
 		Username: userRegisterReq.Username,
@@ -71,9 +68,15 @@ func (uc *UserController) ShowLogin(c *gin.Context) {
 func (uc *UserController) Login(c *gin.Context) {
 	username, _ := c.GetPostForm("username")
 	password, _ := c.GetPostForm("password")
-	userLoginReq := &UserRegisterReq{
+	userLoginReq := &request.UserRegisterReq{
 		Username: username,
 		Password: password,
+	}
+	errs := request.ValidateUserRegisterReq(userLoginReq)
+	if len(errs) > 0 {
+		logrus.Warn("登录失败", errs)
+		c.HTML(http.StatusBadRequest, "error", gin.H{})
+		return
 	}
 	user := &model.User{
 		Username: userLoginReq.Username,
