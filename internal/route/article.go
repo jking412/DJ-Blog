@@ -6,20 +6,18 @@ import (
 )
 
 func registerArticleRoutes(articleGroup *gin.RouterGroup, articleController core.IArticleController) {
-	articleGroup.GET("/create", articleController.Create)
-	articleGroup.GET("/update", articleController.Update)
 	articleGroup.GET("/", articleController.Index)
 	articleGroup.GET("/:id", articleController.ShowArticleDetail)
 	articleGroup.GET("/time", articleController.ShowArticleByTime)
 	articleGroup.GET("/:id/tag", articleController.ShowArticleByTag)
 	articleGroup.GET("/:id/category", articleController.ShowByArticleCategory)
 
-	articleGroup.POST("/", articleController.DoCreate)
+	articleGroup.POST("/", articleController.Create)
 	articleGroup.POST("/search", articleController.Search)
 
 	articleGroup.DELETE("/:id", articleController.Delete)
 
-	articleGroup.PUT("/:id", articleController.DoUpdate)
+	articleGroup.PUT("/:id", articleController.Update)
 }
 
 func registerTagRoutes(tagGroup *gin.RouterGroup, tagController core.ITagController) {

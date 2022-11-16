@@ -2,7 +2,9 @@ package model
 
 import (
 	"DJ-Blog/pkg/database"
+	"DJ-Blog/pkg/encrypt"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -33,4 +35,13 @@ func (u *UserModel) Delete() bool {
 		return false
 	}
 	return true
+}
+
+func (u *UserModel) BeforeSave(tx *gorm.DB) error {
+	if encrypt.IsEncrypt(u.Password) {
+		return nil
+	}
+
+	u.Password = encrypt.EncryptPassword(u.Password)
+	return nil
 }

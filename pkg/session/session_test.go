@@ -6,6 +6,6 @@ import (
 )
 
 func TestInitSession(t *testing.T) {
-	config.InitConfig("../../config")
-	InitSession()
+	config.Init("../../config")
+	Init()
 }

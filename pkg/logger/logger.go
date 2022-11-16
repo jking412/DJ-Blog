@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func InitLogger() {
+func Init() {
 	logrus.SetReportCaller(true)
 	stdoutWriter := os.Stdout
 	logrus.SetOutput(io.MultiWriter(stdoutWriter))

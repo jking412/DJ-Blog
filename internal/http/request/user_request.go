@@ -3,21 +3,24 @@ package request
 import "github.com/thedevsaddam/govalidator"
 
 type UserRegisterReq struct {
-	Username string `valid:"username"`
-	Password string `valid:"password"`
+	Username string `valid:"username" json:"username,omitempty"`
+	Password string `valid:"password" json:"password,omitempty"`
 }
 
 type UserLoginReq struct {
-	Username string `valid:"username"`
-	Password string `valid:"password"`
+	Username string `valid:"username" json:"username,omitempty"`
+	Password string `valid:"password" json:"password,omitempty"`
 }
 
+// ValidateUserRegisterReq 验证用户注册请求
 func ValidateUserRegisterReq(data interface{}) map[string][]string {
+	// 定义验证规则
 	rules := govalidator.MapData{
 		"username": []string{"required", "min:2", "max:20"},
 		"password": []string{"required", "min:6", "max:20"},
 	}
 
+	// 定义验证错误信息
 	messages := govalidator.MapData{
 		"username": []string{
 			"required:用户名为必填项",
@@ -30,6 +33,7 @@ func ValidateUserRegisterReq(data interface{}) map[string][]string {
 			"max:密码长度不能超过 20 个字符",
 		},
 	}
+
 	opts := govalidator.Options{
 		Data:          data,
 		Rules:         rules,

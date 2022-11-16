@@ -11,7 +11,7 @@ import (
 
 var Store sessions.Store
 
-func InitSession() {
+func Init() {
 	authenticationKey := []byte(config.LoadString("session.authenticationKey"))
 	encryptionKey := []byte(config.LoadString("session.encryptionKey"))
 	Store = cookie.NewStore(authenticationKey, encryptionKey)

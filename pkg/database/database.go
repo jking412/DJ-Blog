@@ -18,7 +18,7 @@ type dsn struct {
 
 var DB *gorm.DB
 
-func InitDB() bool {
+func Init() bool {
 	d := dsn{
 		Username: config.LoadString("database.username"),
 		Password: config.LoadString("database.password"),

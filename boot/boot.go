@@ -9,10 +9,10 @@ import (
 )
 
 func Initialize() {
-	config.InitConfig("config")
-	logger.InitLogger()
-	if !database.InitDB() {
+	config.Init("config")
+	logger.Init()
+	if !database.Init() {
 		logrus.Panic("Database init failed")
 	}
-	session.InitSession()
+	session.Init()
 }

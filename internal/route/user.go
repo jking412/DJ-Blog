@@ -6,10 +6,8 @@ import (
 )
 
 func registerUserRoutes(userGroup *gin.RouterGroup, userController core.IUserController) {
-	userGroup.GET("/login", userController.Login)
-	userGroup.GET("/register", userController.Register)
 	userGroup.GET("/logout", userController.Logout)
 
-	userGroup.POST("/login", userController.DoLogin)
-	userGroup.POST("/register", userController.DoRegister)
+	userGroup.POST("/login", userController.Login)
+	userGroup.POST("/register", userController.Register)
 }

@@ -4,7 +4,7 @@ import "github.com/spf13/viper"
 
 var internalViper *viper.Viper
 
-func InitConfig(configPath ...string) {
+func Init(configPath ...string) {
 	internalViper = viper.New()
 	internalViper.SetConfigName("config")
 	if len(configPath) > 0 {

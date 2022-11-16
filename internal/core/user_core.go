@@ -1,18 +1,35 @@
 package core
 
-import "github.com/gin-gonic/gin"
+import (
+	"DJ-Blog/internal/http/request"
+	"DJ-Blog/internal/service"
+	"github.com/gin-gonic/gin"
+)
 
 type IUserController interface {
 	Login(c *gin.Context)
-	DoLogin(c *gin.Context)
 	Register(c *gin.Context)
-	DoRegister(c *gin.Context)
 	Logout(c *gin.Context)
 }
 
 type IGithubUserController interface {
 	GithubLogin(c *gin.Context)
 	GithubLoginCallback(c *gin.Context)
+}
+
+func UserRegister(req *request.UserRegisterReq) (map[string][]string, bool) {
+	errs := make(map[string][]string)
+	errs = request.ValidateUserRegisterReq(req)
+	if len(errs) > 0 {
+		return errs, false
+	}
+
+	if !service.CreateUser(req.Username, req.Password) {
+		errs["server"] = []string{"服务器内部创建用户失败"}
+		return errs, false
+	}
+
+	return errs, true
 }
 
 //
