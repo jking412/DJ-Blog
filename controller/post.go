@@ -4,7 +4,6 @@ import (
 	"DJ-Blog/controller/request"
 	"DJ-Blog/model"
 	"DJ-Blog/pkg/search"
-	"DJ-Blog/pkg/sessionpkg"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -65,7 +64,7 @@ func (pc *PostController) Store(c *gin.Context) {
 		})
 		return
 	}
-	user := sessionpkg.GetUser(c)
+	user := session.GetUser(c)
 	post := &model.Post{
 		Title:   postCreateReq.Title,
 		Tag:     postCreateReq.Tag,
@@ -121,7 +120,7 @@ func (pc *PostController) ShowUpdate(c *gin.Context) {
 	post := &model.Post{}
 	post.Id = id
 	post, _ = post.GetPostById()
-	if post.UserId != sessionpkg.GetUser(c).Id {
+	if post.UserId != session.GetUser(c).Id {
 		c.HTML(http.StatusUnauthorized, "error", gin.H{})
 		return
 	}
@@ -143,7 +142,7 @@ func (pc *PostController) Update(c *gin.Context) {
 			Id: id,
 		},
 	}).GetUserId()
-	if userId != sessionpkg.GetUser(c).Id {
+	if userId != session.GetUser(c).Id {
 		c.HTML(http.StatusUnauthorized, "error", gin.H{})
 		return
 	}
@@ -183,7 +182,7 @@ func (pc *PostController) Delete(c *gin.Context) {
 			Id: id,
 		},
 	}).GetUserId()
-	if userId != sessionpkg.GetUser(c).Id {
+	if userId != session.GetUser(c).Id {
 		c.HTML(http.StatusUnauthorized, "error", gin.H{})
 		return
 	}

@@ -5,7 +5,6 @@ import (
 	"DJ-Blog/model"
 	"DJ-Blog/pkg/helper"
 	"DJ-Blog/pkg/oauth2"
-	"DJ-Blog/pkg/sessionpkg"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-contrib/sessions"
@@ -56,7 +55,7 @@ func (uc *UserController) Register(c *gin.Context) {
 		c.HTML(http.StatusInternalServerError, "error", gin.H{})
 		return
 	}
-	sessionpkg.SetSession(user, sessions.Default(c), sessions.Options{})
+	session.SetSession(user, sessions.Default(c), sessions.Options{})
 	c.Redirect(http.StatusFound, "/user/login")
 }
 
@@ -92,7 +91,7 @@ func (uc *UserController) Login(c *gin.Context) {
 		c.HTML(http.StatusInternalServerError, "error", gin.H{})
 		return
 	}
-	sessionpkg.SetSession(user, sessions.Default(c), sessions.Options{})
+	session.SetSession(user, sessions.Default(c), sessions.Options{})
 	c.Redirect(http.StatusFound, "/")
 }
 
@@ -154,7 +153,7 @@ func (uc *UserController) GithubLoginCallback(c *gin.Context) {
 		c.HTML(http.StatusInternalServerError, "error", gin.H{})
 		return
 	}
-	sessionpkg.SetSession(user, sessions.Default(c), sessions.Options{})
+	session.SetSession(user, sessions.Default(c), sessions.Options{})
 	c.Redirect(http.StatusFound, "/")
 }
 

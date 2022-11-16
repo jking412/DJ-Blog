@@ -7,8 +7,7 @@ import (
 
 func TestInitDB(t *testing.T) {
 	config.InitConfig("../../config")
-	err := InitDB()
-	if err != nil {
-		t.Error(err)
+	if !InitDB() {
+		t.Error("Database init failed")
 	}
 }

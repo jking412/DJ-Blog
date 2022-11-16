@@ -1,37 +1,18 @@
 package boot
 
 import (
-	"DJ-Blog/model"
 	"DJ-Blog/pkg/config"
 	"DJ-Blog/pkg/database"
 	"DJ-Blog/pkg/logger"
-	"DJ-Blog/pkg/search"
-	"DJ-Blog/pkg/sessionpkg"
+	"DJ-Blog/pkg/session"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 func Initialize() {
-	config.InitConfig()
+	config.InitConfig("config")
 	logger.InitLogger()
-
-	for {
-		err := database.InitDB()
-		if err == nil {
-			break
-		}
-		time.Sleep(2 * time.Second)
+	if !database.InitDB() {
+		logrus.Panic("Database init failed")
 	}
-
-	err := database.DB.AutoMigrate(&model.User{},
-		&model.Post{})
-	if err != nil {
-		logrus.Error("Database migration failed")
-		panic(err)
-	} else {
-		logrus.Info("Database migration success")
-	}
-
-	sessionpkg.InitSession()
-	search.InitZincClient()
+	session.InitSession()
 }
