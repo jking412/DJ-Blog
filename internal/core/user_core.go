@@ -2,6 +2,7 @@ package core
 
 import (
 	"DJ-Blog/internal/http/request"
+	"DJ-Blog/internal/model"
 	"DJ-Blog/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -26,13 +27,21 @@ func UserRegister(req *request.UserRegisterReq) (interface{}, bool) {
 		return errs, false
 	}
 
-	if !service.CreateUser(req.Username, req.Password) {
+	user := &model.UserModel{
+		Username:  req.Username,
+		Password:  req.Password,
+		AvatarUrl: req.AvatarUrl,
+	}
+
+	var serviceUser *service.User
+
+	if serviceUser = service.CreateUser(user); serviceUser.Id == 0 {
 		logrus.Error("服务器创建用户失败")
 		errs["server"] = []string{"服务器创建用户失败"}
 		return errs, false
 	}
 
-	return errs, true
+	return serviceUser, true
 }
 
 func UserLogin(req *request.UserLoginReq) (interface{}, bool) {

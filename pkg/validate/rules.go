@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func Init() {
+func init() {
 	// field是结构体中valid后的字段
 	// rule是 rules中定义的规则，如 min:3
 	// message是 rules中定义的错误信息，如 min:用户名长度需至少 3 个字符
@@ -42,4 +42,5 @@ func Init() {
 
 		return nil
 	})
+
 }

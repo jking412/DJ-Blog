@@ -1,35 +1,24 @@
 server:
-  port: 8000
-
-template:
-  path:
-    - ./views/front/*.html
-    - ./views/example/*.html
-
-static:
-  path: ./static
+  port: "8000"
 
 database:
-  type: sqlite
-  mysql:
-    host: mysql
-    port: 3306
-    username: root
-    password: 123456
-    dbname: dj_blog
-
-  sqlite:
-    dbname: dj_blog.db
-
-log:
-  path: logs/logs.log
+  host: "127.0.0.1"
+  port: "3306"
+  username: "root"
+  password: "123456"
+  dbname: "dj_blog"
 
 github:
-  clientId:
-  clientSecret:
+  clientId: ""
+  clientSecret: ""
 
-zinc:
-  username:
-  password:
-  endpoint: "http://localhost:4080"
-  indexName: "posts"
+session:
+  authenticationKey: "XXXXXXXXXXXXXXXX" # 十六位随机字符串
+  encryptionKey: "XXXXXXXXXXXXXXXX" # 十六位随机字符串
+
+
+
+
+
+
+

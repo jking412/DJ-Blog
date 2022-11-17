@@ -3,8 +3,9 @@ package request
 import "github.com/thedevsaddam/govalidator"
 
 type UserRegisterReq struct {
-	Username string `valid:"username" json:"username,omitempty"`
-	Password string `valid:"password" json:"password,omitempty"`
+	Username  string `valid:"username" json:"username,omitempty"`
+	Password  string `valid:"password" json:"password,omitempty"`
+	AvatarUrl string `json:"avatar_url,omitempty"`
 }
 
 type UserLoginReq struct {

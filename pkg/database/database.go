@@ -18,7 +18,7 @@ type dsn struct {
 
 var DB *gorm.DB
 
-func Init() bool {
+func init() {
 	d := dsn{
 		Username: config.LoadString("database.username"),
 		Password: config.LoadString("database.password"),
@@ -29,11 +29,10 @@ func Init() bool {
 	var err error
 	DB, err = gorm.Open(mysql.Open(d.String()), &gorm.Config{})
 	if err != nil {
-		logrus.Error("dsn ", d.String())
-		return false
+		logrus.Panic("dsn ", d.String())
+		return
 	}
 	logrus.Info("Database connected")
-	return true
 }
 
 func (d *dsn) String() string {

@@ -47,17 +47,13 @@ func (u *UserController) Register(c *gin.Context) {
 		response.EndWithUnprocessableJSON(c, nil)
 	}
 
-	errs, ok := core.UserRegister(req)
+	value, ok := core.UserRegister(req)
 	if !ok {
-		logrus.Info("注册失败", errs)
-		response.EndWithUnsatisfiedRequest(c, errs)
+		logrus.Info("注册失败", value)
+		response.EndWithUnsatisfiedRequest(c, value)
 	}
 
-	user, ok := service.GetUserByUsername(req.Username)
-	if !ok {
-		logrus.Error("创建用户后获取用户失败")
-		response.EndWithInternalServerError(c, errs)
-	}
+	user := value.(*service.User)
 
 	s := sessions.Default(c)
 	session.SetUserId(user.Id, s, sessions.Options{})

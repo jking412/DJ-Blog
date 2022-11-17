@@ -1,4 +1,3 @@
 .idea
-dj_blog.db
-logs/logs.log
-config/config.yaml
+
+**/config.yaml
