@@ -17,7 +17,10 @@ session:
   encryptionKey: "XXXXXXXXXXXXXXXX" # 十六位随机字符串
 
 
-
+oss:
+  endpoint:
+  accessKeyID:
+  accessKeySecret:
 
 
 

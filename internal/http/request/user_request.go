@@ -3,14 +3,14 @@ package request
 import "github.com/thedevsaddam/govalidator"
 
 type UserRegisterReq struct {
-	Username  string `valid:"username" json:"username,omitempty"`
-	Password  string `valid:"password" json:"password,omitempty"`
+	Username  string `valid:"username" json:"username,omitempty" example:"required;min:2;max:20"`
+	Password  string `valid:"password" json:"password,omitempty" example:"required;min:6;max:20"`
 	AvatarUrl string `json:"avatar_url,omitempty"`
 }
 
 type UserLoginReq struct {
-	Username string `valid:"username" json:"username,omitempty"`
-	Password string `valid:"password" json:"password,omitempty"`
+	Username string `valid:"username" json:"username,omitempty" example:"required;min:2;max:20"`
+	Password string `valid:"password" json:"password,omitempty" example:"required;min:6;max:20"`
 }
 
 // ValidateUserRegisterReq 验证用户注册请求

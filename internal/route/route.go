@@ -16,7 +16,6 @@ import (
 //@version 1.0
 
 // host  localhost:8000
-// basePath  /
 
 func RegisterRoutes(r *gin.Engine) {
 	r.Use(sessions.Sessions("DJ-Blog", session.Store))

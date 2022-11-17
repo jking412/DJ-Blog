@@ -31,21 +31,12 @@ const docTemplate = `{
                 "summary": "用户登录",
                 "parameters": [
                     {
-                        "description": "用户名",
-                        "name": "username",
+                        "description": "用户登录请求",
+                        "name": "userLoginRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "密码",
-                        "name": "password",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/request.UserLoginReq"
                         }
                     }
                 ],
@@ -82,9 +73,113 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/logout": {
+            "get": {
+                "description": "退出登录",
+                "tags": [
+                    "用户"
+                ],
+                "summary": "退出登录",
+                "responses": {
+                    "20000": {
+                        "description": "退出成功",
+                        "schema": {
+                            "$ref": "#/definitions/response.Status"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/register": {
+            "post": {
+                "description": "用户注册",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "summary": "用户注册",
+                "parameters": [
+                    {
+                        "description": "用户注册请求",
+                        "name": "userRegisterRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UserRegisterReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "20000": {
+                        "description": "注册成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Status"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/service.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "40001": {
+                        "description": "请求参数格式错误",
+                        "schema": {
+                            "$ref": "#/definitions/response.Status"
+                        }
+                    },
+                    "40002": {
+                        "description": "请求参数不符合要求",
+                        "schema": {
+                            "$ref": "#/definitions/response.Status"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "request.UserLoginReq": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "required;min:6;max:20"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "required;min:2;max:20"
+                }
+            }
+        },
+        "request.UserRegisterReq": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "required;min:6;max:20"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "required;min:2;max:20"
+                }
+            }
+        },
         "response.Status": {
             "type": "object",
             "properties": {
