@@ -20,8 +20,9 @@ var (
 )
 
 type Status struct {
-	Code int
-	Msg  string
+	Code int         `json:"code,omitempty"`
+	Msg  string      `json:"msg,omitempty"`
+	Data interface{} `json:"data,omitempty"`
 }
 
 func NewStatus(code int, msg string) *Status {
@@ -32,10 +33,8 @@ func NewStatus(code int, msg string) *Status {
 }
 
 func EndWithJSON(c *gin.Context, status *Status, data interface{}) {
-	c.JSON(status.Code, gin.H{
-		"msg":  status.Msg,
-		"data": data,
-	})
+	status.Data = data
+	c.JSON(status.Code, status)
 }
 
 func EndWithOK(c *gin.Context, data interface{}) {

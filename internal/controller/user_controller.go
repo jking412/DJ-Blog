@@ -21,6 +21,18 @@ func NewUserController() *UserController {
 	return new(UserController)
 }
 
+// Login godoc
+// @Summary 用户登录
+// @Description 用户登录
+// @Tags 用户
+// @Accept  json
+// @Produce  json
+// @Param username body string true "用户名"
+// @Param password body string true "密码"
+// @Success 20000 {object} response.Status{data=service.User} "登录成功"
+// @Failure 40001 {object} response.Status "请求参数格式错误"
+// @Failure 40002 {object} response.Status "请求参数不符合要求"
+// @Router /user/login [post]
 func (u *UserController) Login(c *gin.Context) {
 	req := &request.UserLoginReq{}
 	if err := c.ShouldBindJSON(req); err != nil {

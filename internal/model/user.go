@@ -9,12 +9,12 @@ import (
 )
 
 type UserModel struct {
-	Id        uint32    `gorm:"column:id;primaryKey;autoIncrement"`
-	CreatedAt time.Time `gorm:"column:created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at"`
-	Username  string    `gorm:"column:username"`
-	Password  string    `gorm:"column:password"`
-	AvatarUrl string    `gorm:"column:avatar_url"`
+	Id        uint32    `gorm:"column:id;primaryKey;autoIncrement" example:"1"`
+	CreatedAt time.Time `gorm:"column:created_at" example:"2021-01-01 00:00:00"`
+	UpdatedAt time.Time `gorm:"column:updated_at" example:"2021-01-01 00:00:00"`
+	Username  string    `gorm:"column:username" example:"admin"`
+	Password  string    `gorm:"column:password" example:"123456"`
+	AvatarUrl string    `gorm:"column:avatar_url" example:"https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"`
 }
 
 func (u *UserModel) TableName() string {

@@ -1,60 +1,34 @@
 package route
 
 import (
+	_ "DJ-Blog/docs"
+	"DJ-Blog/internal/controller"
 	"DJ-Blog/pkg/session"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 )
+
+//@title DJ-Blog API文档
+//@description DJ-Blog API文档
+//@version 1.0
+
+// host  localhost:8000
+// basePath  /
 
 func RegisterRoutes(r *gin.Engine) {
 	r.Use(sessions.Sessions("DJ-Blog", session.Store))
 
 	r.Any("/ping", Ping)
 
-	//userGroup := r.Group("/user")
-	//{
-	//
-	//}
+	registerUserRoutes(r.Group("/user"), controller.NewUserController())
 
-	//uc := &controller.UserController{}
-	//
-	//r.GET("/", pc.Index)
-	//
-	//userGroup := r.Group("/user")
-	//{
-	//	userGroup.GET("/register", uc.ShowRegister)
-	//	userGroup.POST("/register", uc.RegisterRoutes)
-	//	userGroup.GET("/login", uc.ShowLogin)
-	//	userGroup.POST("/login", uc.Login)
-	//
-	//	userGroup.GET("/github/login", uc.GithubLogin)
-	//	userGroup.GET("/github/oauth2", uc.GithubLoginCallback)
-	//
-	//	userGroup.GET("/logout", uc.Logout)
-	//}
-	//
-	//postGroup := r.Group("/post")
-	//{
-	//	postGroup.GET("/:id", pc.Detail)
-	//
-	//	postGroup.GET("/search", pc.ShowSearch)
-	//	postGroup.POST("/search", pc.Search)
-	//
-	//	postGroup.Use(middleware.Auth())
-	//
-	//	postGroup.GET("/create", pc.Create)
-	//	postGroup.POST("/store", pc.Store)
-	//
-	//	postGroup.GET("/update/:id", pc.ShowUpdate)
-	//	postGroup.POST("/update", pc.Update)
-	//
-	//	postGroup.GET("/delete/:id", pc.Delete)
-	//
-	//}
+	// 处理swagger文档的接口配置
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.NoRoute(NoRouteHandler)
-
 }
 
 func Ping(c *gin.Context) {
