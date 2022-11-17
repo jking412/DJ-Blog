@@ -36,13 +36,15 @@ func (u *UserController) Login(c *gin.Context) {
 	req := &request.UserLoginReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		logrus.Info("注册请求JSON格式错误", err)
-		response.EndWithUnprocessableJSON(c, nil)
+		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	value, ok := core.UserLogin(req)
 	if !ok {
 		logrus.Info("登录失败", value)
 		response.EndWithUnsatisfiedRequest(c, value)
+		return
 	}
 
 	user := value.(*service.User)
@@ -68,13 +70,15 @@ func (u *UserController) Register(c *gin.Context) {
 	req := &request.UserRegisterReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		logrus.Info("注册请求JSON格式错误", err)
-		response.EndWithUnprocessableJSON(c, nil)
+		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	value, ok := core.UserRegister(req)
 	if !ok {
 		logrus.Info("注册失败", value)
 		response.EndWithUnsatisfiedRequest(c, value)
+		return
 	}
 
 	user := value.(*service.User)
@@ -96,12 +100,40 @@ func (u *UserController) Logout(c *gin.Context) {
 	response.EndWithOK(c, nil)
 }
 
-func (u *UserController) UploadFile(c *gin.Context) {
+func (u *UserController) UploadAvatarImg(c *gin.Context) {
 
+	avatarImg, err := c.FormFile("avatarImg")
+	if err != nil {
+		logrus.Info("上传文件失败", err)
+		response.EndWithUnprocessableData(c, nil)
+		return
+	}
+
+	user := session.GetUser(c)
+	ok := core.UploadAvatarImg(user.Username, avatarImg)
+	if !ok {
+		logrus.Warn("上传头像失败")
+		response.EndWithInternalServerError(c, nil)
+		return
+	}
+
+	response.EndWithOK(c, nil)
 }
 
-func (u *UserController) DownloadFile(c *gin.Context) {
+func (u *UserController) GetAvatarImg(c *gin.Context) {
 
+	user := session.GetUser(c)
+
+	avatarImg, ok := core.GetAvatarImg(user.Username)
+	if !ok {
+		logrus.Warn("获取头像失败")
+		return
+	}
+
+	// TODO: 优化response包，封装响应图片的方法
+	c.Writer.Header().Set("Content-Type", "image/jpeg")
+	c.Writer.Header().Set("Content-Length", fmt.Sprintf("%d", len(avatarImg)))
+	_, _ = c.Writer.Write(avatarImg)
 }
 
 func (u *UserController) GithubLogin(c *gin.Context) {

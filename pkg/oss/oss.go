@@ -4,12 +4,15 @@ import (
 	"sync"
 )
 
+// TODO: 测试 Oss功能
+
 type Oss interface {
 	MakeBucket(bucketName string) bool
 	IsExistBucket(bucketName string) bool
-	UploadFile(bucketName, objectName string, object interface{}) bool
-	DownloadFile(bucketName, objectName string) (interface{}, bool)
-	DeleteFile(bucketName, objectName string) bool
+	UploadObject(bucketName, objectName string, object interface{}) bool
+	DownloadObject(bucketName, objectName string) (interface{}, bool)
+	DeleteObject(bucketName, objectName string) bool
+	IsExistObject(bucketName, objectName string) bool
 }
 
 type Client struct {
@@ -38,13 +41,17 @@ func UploadFile(bucketName, objectName string, obj interface{}) bool {
 	if !ShouldMakeBucket(bucketName) {
 		return false
 	}
-	return client.UploadFile(bucketName, objectName, obj)
+	return client.UploadObject(bucketName, objectName, obj)
 }
 
 func DownloadFile(bucketName, objectName string) (interface{}, bool) {
-	return client.DownloadFile(bucketName, objectName)
+	return client.DownloadObject(bucketName, objectName)
 }
 
 func DeleteFile(bucketName, objectName string) bool {
-	return client.DeleteFile(bucketName, objectName)
+	return client.DeleteObject(bucketName, objectName)
+}
+
+func IsExistFile(bucketName, objectName string) bool {
+	return client.IsExistObject(bucketName, objectName)
 }

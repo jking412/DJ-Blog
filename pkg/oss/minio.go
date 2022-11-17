@@ -56,7 +56,16 @@ func (m *MinioClient) IsExistBucket(bucketName string) bool {
 	return exist
 }
 
-func (m *MinioClient) UploadFile(bucketName, objectName string, obj interface{}) bool {
+func (m *MinioClient) IsExistObject(bucketName, objectName string) bool {
+	_, err := m.client.StatObject(m.ctx, bucketName, objectName, minio.StatObjectOptions{})
+	if err != nil {
+		logrus.Error("minio check file exist error: ", err)
+		return false
+	}
+	return true
+}
+
+func (m *MinioClient) UploadObject(bucketName, objectName string, obj interface{}) bool {
 
 	reader := obj.(io.Reader)
 
@@ -68,7 +77,7 @@ func (m *MinioClient) UploadFile(bucketName, objectName string, obj interface{})
 	return true
 }
 
-func (m *MinioClient) DownloadFile(bucketName, objectName string) (interface{}, bool) {
+func (m *MinioClient) DownloadObject(bucketName, objectName string) (interface{}, bool) {
 	object, err := m.client.GetObject(m.ctx, bucketName, objectName, minio.GetObjectOptions{})
 	if err != nil {
 		logrus.Error("minio download file error: ", err)
@@ -77,7 +86,7 @@ func (m *MinioClient) DownloadFile(bucketName, objectName string) (interface{}, 
 	return object, true
 }
 
-func (m *MinioClient) DeleteFile(bucketName, objectName string) bool {
+func (m *MinioClient) DeleteObject(bucketName, objectName string) bool {
 	err := m.client.RemoveObject(m.ctx, bucketName, objectName, minio.RemoveObjectOptions{})
 	if err != nil {
 		logrus.Error("minio delete file error: ", err)

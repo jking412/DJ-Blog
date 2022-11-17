@@ -11,7 +11,7 @@ var (
 	// BadRequest is a bad request
 	// 40000 - 49999 为用户端错误
 	BadRequest         = NewStatus(40000, "请求错误")
-	UnprocessableJSON  = NewStatus(40001, "JSON 格式错误")
+	UnprocessableData  = NewStatus(40001, "数据格式错误")
 	UnsatisfiedRequest = NewStatus(40002, "请求参数不满足要求")
 
 	// InternalServerError is a internal server error
@@ -45,8 +45,8 @@ func EndWithBadRequest(c *gin.Context, data interface{}) {
 	EndWithJSON(c, BadRequest, data)
 }
 
-func EndWithUnprocessableJSON(c *gin.Context, data interface{}) {
-	EndWithJSON(c, UnprocessableJSON, data)
+func EndWithUnprocessableData(c *gin.Context, data interface{}) {
+	EndWithJSON(c, UnprocessableData, data)
 }
 
 func EndWithUnsatisfiedRequest(c *gin.Context, data interface{}) {

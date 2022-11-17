@@ -4,11 +4,8 @@ import "github.com/gin-gonic/gin"
 
 type IArticleController interface {
 	Create(c *gin.Context)
-
 	Delete(c *gin.Context)
-
 	Index(c *gin.Context)
-
 	Update(c *gin.Context)
 
 	ShowArticleDetail(c *gin.Context)
