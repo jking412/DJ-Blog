@@ -55,6 +55,14 @@ func GetUserByUsername(username string) (*User, bool) {
 	return user, true
 }
 
+func DeleteUserByUsername(username string) bool {
+	if err := database.DB.Where("username = ?", username).Delete(&model.UserModel{}).Error; err != nil {
+		logrus.Error("Delete user failed", err)
+		return false
+	}
+	return true
+}
+
 func IsExistUser(username string) bool {
 	var count int64
 	database.DB.Model(&model.UserModel{}).Where("username = ?", username).Count(&count)

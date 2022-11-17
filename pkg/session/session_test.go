@@ -1,11 +1,11 @@
 package session
 
 import (
-	// 初始化配置
-	_ "DJ-Blog/pkg/config"
+	"DJ-Blog/boot"
 	"testing"
 )
 
 // 触发 init()函数来测试
 func TestInitSession(t *testing.T) {
+	boot.Initialize()
 }
