@@ -22,16 +22,16 @@ func NewUserController() *UserController {
 }
 
 // Login godoc
-// @Summary 用户登录
+// @Summary     用户登录
 // @Description 用户登录
-// @Tags 用户
-// @Accept  json
-// @Produce  json
-// @Param userLoginRequest body request.UserLoginReq true "用户登录请求"
-// @Success 20000 {object} response.Status{data=service.User} "登录成功"
-// @Failure 40001 {object} response.Status "请求参数格式错误"
-// @Failure 40002 {object} response.Status "请求参数不符合要求"
-// @Router /user/login [post]
+// @Tags        用户
+// @Accept      json
+// @Produce     json
+// @Param       userLoginRequest body     request.UserLoginReq               true "用户登录请求"
+// @Success     20000            {object} response.Status{data=service.User} "登录成功"
+// @Failure     40001            {object} response.Status                    "请求参数格式错误"
+// @Failure     40002            {object} response.Status                    "请求参数不符合要求"
+// @Router      /user/login [post]
 func (u *UserController) Login(c *gin.Context) {
 	req := &request.UserLoginReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
@@ -56,16 +56,16 @@ func (u *UserController) Login(c *gin.Context) {
 }
 
 // Register godoc
-// @Summary 用户注册
+// @Summary     用户注册
 // @Description 用户注册
-// @Tags 用户
-// @Accept  json
-// @Produce  json
-// @Param userRegisterRequest body request.UserRegisterReq true "用户注册请求"
-// @Success 20000 {object} response.Status{data=service.User} "注册成功"
-// @Failure 40001 {object} response.Status "请求参数格式错误"
-// @Failure 40002 {object} response.Status "请求参数不符合要求"
-// @Router /user/register [post]
+// @Tags        用户
+// @Accept      json
+// @Produce     json
+// @Param       userRegisterRequest body     request.UserRegisterReq            true "用户注册请求"
+// @Success     20000               {object} response.Status{data=service.User} "注册成功"
+// @Failure     40001               {object} response.Status                    "请求参数格式错误"
+// @Failure     40002               {object} response.Status                    "请求参数不符合要求"
+// @Router      /user/register [post]
 func (u *UserController) Register(c *gin.Context) {
 	req := &request.UserRegisterReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
@@ -90,11 +90,11 @@ func (u *UserController) Register(c *gin.Context) {
 }
 
 // Logout godoc
-// @Summary 退出登录
+// @Summary     退出登录
 // @Description 退出登录
-// @Tags 用户
-// @Success 20000 {object} response.Status "退出成功"
-// @Router /user/logout [get]
+// @Tags        用户
+// @Success     20000 {object} response.Status "退出成功"
+// @Router      /user/logout [get]
 func (u *UserController) Logout(c *gin.Context) {
 	session.ClearUserId(sessions.Default(c))
 	response.EndWithOK(c, nil)

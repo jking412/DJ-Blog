@@ -16,6 +16,10 @@ definitions:
         example: required;min:6;max:20
         type: string
       username:
+        description: |-
+          example 是 swagger 文档中的示例的关键字，用于生成 swagger 文档。
+          这里的值并没有使用一个真的示例，而是用了这个数据的限制作为示例。
+          TODO: 利用这个example值，做自动化的测试，限制条件之间用分号分隔，如：min:2,max:20
         example: required;min:2;max:20
         type: string
     type: object

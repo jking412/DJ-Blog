@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	model.UserModel
+	model.UserModel `json:"user,omitempty"`
 }
 
 func CreateUser(user *model.UserModel) *User {
@@ -39,6 +39,14 @@ func CreateUser(user *model.UserModel) *User {
 	return serviceUser
 }
 
+func DeleteUserByUsername(username string) bool {
+	if err := database.DB.Where("username = ?", username).Delete(&model.UserModel{}).Error; err != nil {
+		logrus.Error("Delete user failed", err)
+		return false
+	}
+	return true
+}
+
 func GetUserById(id int32) (*User, bool) {
 	user := &User{}
 	if err := database.DB.Model(&model.UserModel{}).Where("id = ?", id).First(user).Error; err != nil {
@@ -53,14 +61,6 @@ func GetUserByUsername(username string) (*User, bool) {
 		return nil, false
 	}
 	return user, true
-}
-
-func DeleteUserByUsername(username string) bool {
-	if err := database.DB.Where("username = ?", username).Delete(&model.UserModel{}).Error; err != nil {
-		logrus.Error("Delete user failed", err)
-		return false
-	}
-	return true
 }
 
 func IsExistUser(username string) bool {

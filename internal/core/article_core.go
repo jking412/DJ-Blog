@@ -1,6 +1,13 @@
 package core
 
-import "github.com/gin-gonic/gin"
+import (
+	"DJ-Blog/internal/http/request"
+	"DJ-Blog/internal/model"
+	"DJ-Blog/internal/service"
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
+	"time"
+)
 
 type IArticleController interface {
 	Create(c *gin.Context)
@@ -23,6 +30,65 @@ type ITagController interface {
 type ICategoryController interface {
 	ShowCategories(c *gin.Context)
 	ShowSpecificCategory(c *gin.Context)
+}
+
+func ArticleCreate(req *request.ArticleCreateReq) (interface{}, bool) {
+	errs := make(map[string][]string)
+	errs = request.ValidateArticleReq(req)
+
+	if len(errs) > 0 {
+		return errs, false
+	}
+
+	article := &model.ArticleModel{
+		Title:         req.Title,
+		OriginContent: req.OriginContent,
+		ParseContent:  req.ParseContent,
+		ImgUrl:        req.ImgUrl,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
+		UserId:        req.UserId,
+	}
+
+	var serviceArticle *service.Article
+
+	if serviceArticle = service.CreateArticle(article); serviceArticle.Id == 0 {
+		logrus.Error("服务器创建文章失败")
+		errs["server"] = []string{"服务器创建文章失败"}
+		return errs, false
+	}
+
+	return serviceArticle, true
+}
+
+func ArticleUpdate(req *request.ArticleUpdateReq) (interface{}, bool) {
+	errs := make(map[string][]string)
+	errs = request.ValidateArticleReq(req)
+
+	if len(errs) > 0 {
+		return errs, false
+	}
+
+	article := &model.ArticleModel{
+		Id:            req.Id,
+		Title:         req.Title,
+		OriginContent: req.OriginContent,
+		ParseContent:  req.ParseContent,
+		ImgUrl:        req.ImgUrl,
+		UpdatedAt:     time.Now(),
+	}
+
+	serviceArticle := &service.Article{
+		ArticleModel: article,
+	}
+
+	if !service.UpdateArticle(article) {
+		logrus.Error("服务器更新文章失败")
+		errs["server"] = []string{"服务器更新文章失败"}
+		return errs, false
+	}
+
+	return serviceArticle, true
 }
 
 //type PostController struct {

@@ -13,6 +13,7 @@ var (
 	BadRequest         = NewStatus(40000, "请求错误")
 	UnprocessableData  = NewStatus(40001, "数据格式错误")
 	UnsatisfiedRequest = NewStatus(40002, "请求参数不满足要求")
+	Unauthorized       = NewStatus(40003, "未授权")
 
 	// InternalServerError is a internal server error
 	// 50000 - 59999 为服务器端错误

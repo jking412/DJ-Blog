@@ -1,10 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"testing"
-	"time"
 )
 
+type A struct {
+	AbCdEf int
+}
+
 func TestTemp(t *testing.T) {
-	t.Log(time.Now().Format("2006-01-02 15:04:05.000000000"))
+	a := A{
+		AbCdEf: 1,
+	}
+	marshal, _ := json.Marshal(a)
+	t.Log(string(marshal))
 }
