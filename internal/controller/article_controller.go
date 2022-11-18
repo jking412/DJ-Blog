@@ -25,6 +25,7 @@ func (a *ArticleController) Create(c *gin.Context) {
 	if err := c.ShouldBindJSON(req); err != nil {
 		logrus.Info("创建文章请求JSON格式错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	user := session.GetUser(c)
@@ -34,6 +35,7 @@ func (a *ArticleController) Create(c *gin.Context) {
 	if !ok {
 		logrus.Info("创建文章失败", value)
 		response.EndWithUnsatisfiedRequest(c, value)
+		return
 	}
 
 	userService := value.(*service.Article)
@@ -47,18 +49,18 @@ func (a *ArticleController) Delete(c *gin.Context) {
 	if err != nil {
 		logrus.Info("删除文章请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	ok := service.DeleteArticleById(uint32(articleId))
 	if !ok {
 		logrus.Info("删除文章失败")
 		response.EndWithUnsatisfiedRequest(c, nil)
+		return
 	}
 
 	response.EndWithOK(c, articleId)
 }
-
-// TODO: 所有的显示文章的接口都需要添加分页功能
 
 func (a *ArticleController) Index(c *gin.Context) {
 
@@ -67,18 +69,21 @@ func (a *ArticleController) Index(c *gin.Context) {
 	if err := c.ShouldBindQuery(&req); err != nil {
 		logrus.Info("分页请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	articles, ok := service.GetArticleList()
 	if !ok {
 		logrus.Info("获取文章列表失败")
 		response.EndWithInternalServerError(c, nil)
+		return
 	}
 
 	articles, ok = paginations.ArticlePagination(articles, req.PageNum, req.PageSize)
 	if !ok {
 		logrus.Info("分页失败")
 		response.EndWithUnsatisfiedRequest(c, nil)
+		return
 	}
 
 	response.EndWithOK(c, articles)
@@ -91,11 +96,13 @@ func (a *ArticleController) Update(c *gin.Context) {
 	if err != nil {
 		logrus.Info("删除文章请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	if err := c.ShouldBindJSON(req); err != nil {
 		logrus.Info("创建文章请求JSON格式错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	user := session.GetUser(c)
@@ -106,6 +113,7 @@ func (a *ArticleController) Update(c *gin.Context) {
 	if !ok {
 		logrus.Info("更新文章失败", value)
 		response.EndWithUnsatisfiedRequest(c, value)
+		return
 	}
 
 	serviceArticle := value.(*service.Article)
@@ -119,12 +127,14 @@ func (a *ArticleController) ShowArticleDetail(c *gin.Context) {
 	if err != nil {
 		logrus.Info("文章请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	article, ok := service.GetArticleById(uint32(articleId))
 	if !ok {
 		logrus.Info("获取文章失败")
 		response.EndWithInternalServerError(c, nil)
+		return
 	}
 
 	response.EndWithOK(c, article)
@@ -137,18 +147,21 @@ func (a *ArticleController) ShowArticleByTime(c *gin.Context) {
 	if err := c.ShouldBindQuery(&req); err != nil {
 		logrus.Info("分页请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	articles, ok := service.GetArticleOrderByTime()
 	if !ok {
 		logrus.Info("获取文章列表失败")
 		response.EndWithInternalServerError(c, nil)
+		return
 	}
 
 	articles, ok = paginations.ArticlePagination(articles, req.PageNum, req.PageSize)
 	if !ok {
 		logrus.Info("分页失败")
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	response.EndWithOK(c, articles)
@@ -232,6 +245,7 @@ func (a *ArticleController) ShowTags(c *gin.Context) {
 	if !ok {
 		logrus.Info("获取标签列表失败")
 		response.EndWithInternalServerError(c, nil)
+		return
 	}
 
 	response.EndWithOK(c, tags)
@@ -243,6 +257,7 @@ func (a *ArticleController) ShowCategories(c *gin.Context) {
 	if !ok {
 		logrus.Info("获取分类列表失败")
 		response.EndWithInternalServerError(c, nil)
+		return
 	}
 
 	response.EndWithOK(c, categories)
@@ -255,24 +270,28 @@ func (a *ArticleController) ShowSpecificCategory(c *gin.Context) {
 	if err := c.ShouldBindQuery(&req); err != nil {
 		logrus.Info("分页请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	categoryId, err := strconv.ParseUint(c.Param("categoryId"), 10, 32)
 	if err != nil {
 		logrus.Info("分类请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	articles, ok := service.GetArticleByCategoryId(uint32(categoryId))
 	if !ok {
 		logrus.Info("获取文章列表失败")
 		response.EndWithInternalServerError(c, nil)
+		return
 	}
 
 	articles, ok = paginations.ArticlePagination(articles, req.PageNum, req.PageSize)
 	if !ok {
 		logrus.Info("分页失败")
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	response.EndWithOK(c, articles)
