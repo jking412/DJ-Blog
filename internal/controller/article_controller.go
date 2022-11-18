@@ -5,6 +5,7 @@ import (
 	"DJ-Blog/internal/http/request"
 	"DJ-Blog/internal/http/response"
 	"DJ-Blog/internal/service"
+	"DJ-Blog/pkg/paginations"
 	"DJ-Blog/pkg/session"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -61,10 +62,23 @@ func (a *ArticleController) Delete(c *gin.Context) {
 
 func (a *ArticleController) Index(c *gin.Context) {
 
+	req := request.PaginationReq{}
+
+	if err := c.ShouldBindQuery(&req); err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithUnprocessableData(c, nil)
+	}
+
 	articles, ok := service.GetArticleList()
 	if !ok {
 		logrus.Info("获取文章列表失败")
 		response.EndWithInternalServerError(c, nil)
+	}
+
+	articles, ok = paginations.ArticlePagination(articles, req.PageNum, req.PageSize)
+	if !ok {
+		logrus.Info("分页失败")
+		response.EndWithUnsatisfiedRequest(c, nil)
 	}
 
 	response.EndWithOK(c, articles)
@@ -118,10 +132,23 @@ func (a *ArticleController) ShowArticleDetail(c *gin.Context) {
 
 func (a *ArticleController) ShowArticleByTime(c *gin.Context) {
 
+	req := request.PaginationReq{}
+
+	if err := c.ShouldBindQuery(&req); err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithUnprocessableData(c, nil)
+	}
+
 	articles, ok := service.GetArticleOrderByTime()
 	if !ok {
 		logrus.Info("获取文章列表失败")
 		response.EndWithInternalServerError(c, nil)
+	}
+
+	articles, ok = paginations.ArticlePagination(articles, req.PageNum, req.PageSize)
+	if !ok {
+		logrus.Info("分页失败")
+		response.EndWithUnprocessableData(c, nil)
 	}
 
 	response.EndWithOK(c, articles)
@@ -129,16 +156,33 @@ func (a *ArticleController) ShowArticleByTime(c *gin.Context) {
 
 func (a *ArticleController) ShowArticleByTag(c *gin.Context) {
 
+	req := request.PaginationReq{}
+
+	if err := c.ShouldBindQuery(&req); err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithUnprocessableData(c, nil)
+		return
+	}
+
 	tagId, err := strconv.ParseUint(c.Param("tagId"), 10, 32)
 	if err != nil {
 		logrus.Info("标签请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	articles, ok := service.GetArticleByTagId(uint32(tagId))
 	if !ok {
 		logrus.Info("获取文章列表失败")
 		response.EndWithInternalServerError(c, nil)
+		return
+	}
+
+	articles, ok = paginations.ArticlePagination(articles, req.PageNum, req.PageSize)
+	if !ok {
+		logrus.Info("分页失败")
+		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	response.EndWithOK(c, articles)
@@ -146,16 +190,33 @@ func (a *ArticleController) ShowArticleByTag(c *gin.Context) {
 
 func (a *ArticleController) ShowByArticleCategory(c *gin.Context) {
 
+	req := request.PaginationReq{}
+
+	if err := c.ShouldBindQuery(&req); err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithUnprocessableData(c, nil)
+		return
+	}
+
 	categoryId, err := strconv.ParseUint(c.Param("categoryId"), 10, 32)
 	if err != nil {
 		logrus.Info("分类请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	articles, ok := service.GetArticleByCategoryId(uint32(categoryId))
 	if !ok {
 		logrus.Info("获取文章列表失败")
 		response.EndWithInternalServerError(c, nil)
+		return
+	}
+
+	articles, ok = paginations.ArticlePagination(articles, req.PageNum, req.PageSize)
+	if !ok {
+		logrus.Info("分页失败")
+		response.EndWithUnprocessableData(c, nil)
+		return
 	}
 
 	response.EndWithOK(c, articles)
@@ -189,6 +250,13 @@ func (a *ArticleController) ShowCategories(c *gin.Context) {
 
 func (a *ArticleController) ShowSpecificCategory(c *gin.Context) {
 
+	req := request.PaginationReq{}
+
+	if err := c.ShouldBindQuery(&req); err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithUnprocessableData(c, nil)
+	}
+
 	categoryId, err := strconv.ParseUint(c.Param("categoryId"), 10, 32)
 	if err != nil {
 		logrus.Info("分类请求参数错误", err)
@@ -199,6 +267,12 @@ func (a *ArticleController) ShowSpecificCategory(c *gin.Context) {
 	if !ok {
 		logrus.Info("获取文章列表失败")
 		response.EndWithInternalServerError(c, nil)
+	}
+
+	articles, ok = paginations.ArticlePagination(articles, req.PageNum, req.PageSize)
+	if !ok {
+		logrus.Info("分页失败")
+		response.EndWithUnprocessableData(c, nil)
 	}
 
 	response.EndWithOK(c, articles)

@@ -12,6 +12,11 @@ type ArticleCreateReq struct {
 	UserId        uint32 `json:"userId,omitempty"`
 }
 
+type PaginationReq struct {
+	PageNum  int `json:"pageNum" example:"1"`
+	PageSize int `json:"pageSize" example:"10"`
+}
+
 type ArticleUpdateReq struct {
 	Id            uint32 `valid:"id" json:"id,omitempty" example:"required"`
 	Title         string `valid:"title" json:"title,omitempty" example:"required"`
