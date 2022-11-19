@@ -11,10 +11,10 @@ type ArticleModel struct {
 	Id            uint32    `gorm:"column:id" json:"id,omitempty"`
 	CreatedAt     time.Time `gorm:"column:created_at" json:"createdAt"`
 	UpdatedAt     time.Time `gorm:"column:updated_at" json:"updatedAt"`
-	Title         string    `gorm:"column:title;index" json:"title,omitempty"`
-	OriginContent string    `gorm:"column:origin_content;index" json:"originContent,omitempty"`
-	ParseContent  string    `gorm:"column:parse_content" json:"parseContent,omitempty"`
-	ImgUrl        string    `gorm:"column:img_url" json:"imgUrl,omitempty"`
+	Title         string    `gorm:"column:title;type:varchar(255);index:,class:FULLTEXT" json:"title,omitempty"`
+	OriginContent string    `gorm:"column:origin_content;type:longtext;index:,class:FULLTEXT" json:"originContent,omitempty"`
+	ParseContent  string    `gorm:"column:parse_content;type:longtext" json:"parseContent,omitempty"`
+	ImgUrl        string    `gorm:"column:img_url;type:varchar(255)" json:"imgUrl,omitempty"`
 	UserId        uint32    `gorm:"column:user_id" json:"userId,omitempty"`
 }
 

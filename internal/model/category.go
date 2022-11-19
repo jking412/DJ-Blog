@@ -8,7 +8,7 @@ import (
 
 type CategoryModel struct {
 	Id   uint32 `gorm:"column:id;primaryKey;autoIncrement"`
-	Name string `gorm:"column:name"`
+	Name string `gorm:"column:name;type:varchar(255)"`
 }
 
 func (c *CategoryModel) Create() bool {
