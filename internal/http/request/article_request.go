@@ -4,12 +4,16 @@ import (
 	"github.com/thedevsaddam/govalidator"
 )
 
+// TODO: 处理文章请求中的分类和标签
+
 type ArticleCreateReq struct {
 	Title         string `valid:"title" json:"title,omitempty" example:"required"`
 	OriginContent string `valid:"originContent" json:"originContent,omitempty" example:"required"`
 	ParseContent  string `valid:"parseContent" json:"parseContent,omitempty" example:"required"`
 	ImgUrl        string `json:"imgUrl,omitempty"`
-	UserId        uint32 `json:"userId,omitempty"`
+	UserId        uint32 `json:"-"`
+	Tags 		[]uint32 `json:"tags,omitempty"`
+	Categories  []uint32 `json:"categories,omitempty"`
 }
 
 type PaginationReq struct {
@@ -23,7 +27,9 @@ type ArticleUpdateReq struct {
 	OriginContent string `valid:"originContent" json:"originContent,omitempty" example:"required"`
 	ParseContent  string `valid:"parseContent" json:"parseContent,omitempty" example:"required"`
 	ImgUrl        string `json:"imgUrl,omitempty"`
-	UserId        uint32 `json:"userId,omitempty"`
+	UserId        uint32 `json:"-"`
+	Tags 		[]uint32 `json:"tags,omitempty"`
+	Categories  []uint32 `json:"categories,omitempty"`
 }
 
 func ValidateArticleReq(data interface{}) map[string][]string {

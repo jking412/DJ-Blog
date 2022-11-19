@@ -2,6 +2,7 @@ package model
 
 import (
 	"DJ-Blog/pkg/database"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"time"
 )
@@ -43,4 +44,16 @@ func (a *ArticleModel) Update() bool {
 		return false
 	}
 	return true
+}
+
+func (a *ArticleModel) String() string {
+	return fmt.Sprintf("ArticleModel{Id:%d, CreatedAt:%s, UpdatedAt:%s, Title:%s, OriginContent:%s, ParseContent:%s, ImgUrl:%s, UserId:%d}\n",
+		a.Id,
+		a.CreatedAt,
+		a.UpdatedAt,
+		a.Title,
+		a.OriginContent,
+		a.ParseContent,
+		a.ImgUrl,
+		a.UserId)
 }

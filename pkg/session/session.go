@@ -28,7 +28,7 @@ func GetUser(c *gin.Context) *service.User {
 
 	var user *service.User
 	var ok bool
-	if user, ok = service.GetUserById(userId.(int32)); !ok {
+	if user, ok = service.GetUserById(userId.(uint32)); !ok {
 		logrus.Warn("session get user failed")
 		return nil
 	}

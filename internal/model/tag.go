@@ -2,6 +2,7 @@ package model
 
 import (
 	"DJ-Blog/pkg/database"
+	"fmt"
 	"github.com/sirupsen/logrus"
 )
 
@@ -36,4 +37,8 @@ func (t *TagModel) Update() bool {
 		return false
 	}
 	return true
+}
+
+func (t *TagModel) String() string {
+	return fmt.Sprintf("TagModel{Id:%d,Name:%s}\n", t.Id, t.Name)
 }

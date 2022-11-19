@@ -10,43 +10,90 @@ import (
 // 用于处理业务逻辑，也用于处理和返回数据
 type Article struct {
 	*model.ArticleModel `json:"article,omitempty"`
-	Tags                []model.TagModel      `json:"tags,omitempty"`
-	Categories          []model.CategoryModel `json:"categories,omitempty"`
+	Tags                []model.TagModel      `json:"tags,omitempty" gorm:"-"`
+	Categories          []model.CategoryModel `json:"categories,omitempty" gorm:"-"`
 }
 
-func CreateArticle(article *model.ArticleModel) *Article {
+type ArticleTagRelation struct {
+	ArticleId uint32 `gorm:"column:article_id"`
+	TagId     uint32 `gorm:"column:tag_id"`
+}
+
+type ArticleCategoryRelation struct {
+	ArticleId  uint32 `gorm:"column:article_id"`
+	CategoryId uint32 `gorm:"column:category_id"`
+}
+
+func (a *ArticleTagRelation) TableName() string {
+	return "article_tag_relation"
+}
+
+func (a *ArticleCategoryRelation) TableName() string {
+	return "article_category_relation"
+}
+
+func CreateArticle(article *Article) *Article {
 
 	if err := database.DB.Create(article).Error; err != nil {
 		logrus.Warn("Create article failed", err)
 		return nil
 	}
 
-	serviceArticle := &Article{
-		ArticleModel: article,
+	database.DB.Raw("SELECT LAST_INSERT_ID()").Scan(&article.Id)
+
+	articleTagRelation := make([]ArticleTagRelation, 0)
+	for _, tag := range article.Tags {
+		articleTagRelation = append(articleTagRelation, ArticleTagRelation{
+			ArticleId: article.Id,
+			TagId:     tag.Id,
+		})
 	}
 
-	database.DB.Raw("SELECT LAST_INSERT_ID()").Scan(&serviceArticle.Id)
+	database.DB.Create(articleTagRelation)
 
-	return serviceArticle
+	articleCategoryRelation := make([]ArticleCategoryRelation, 0)
+	for _, category := range article.Categories {
+		articleCategoryRelation = append(articleCategoryRelation, ArticleCategoryRelation{
+			ArticleId:  article.Id,
+			CategoryId: category.Id,
+		})
+	}
+
+	database.DB.Create(articleCategoryRelation)
+
+	return article
 }
 
 func DeleteArticleById(id uint32) bool {
+
 	if err := database.DB.Model(&model.ArticleModel{}).Where("id = ?", id).Delete(&model.ArticleModel{}).Error; err != nil {
 		logrus.Warn("Delete article failed", err)
 		return false
 	}
+
+	if err := database.DB.Table("article_tag_relation").Where("article_id = ?", id).Delete(&ArticleTagRelation{}).Error; err != nil {
+		logrus.Warn("Delete article tag relation failed", err)
+		return false
+	}
+
+	if err := database.DB.Table("article_category_relation").Where("article_id = ?", id).Delete(&ArticleCategoryRelation{}).Error; err != nil {
+		logrus.Warn("Delete article category relation failed", err)
+		return false
+	}
+
 	return true
 }
 
 func GetArticleList() ([]Article, bool) {
-	articles := make([]Article, 0)
-	if err := database.DB.Model(&model.ArticleModel{}).Preload("Tags").
-		Preload("Categories").
-		Find(articles).Error; err != nil {
+
+	article := make([]Article, 0)
+	rsMap := make(map[string][]interface{})
+	if err := database.DB.Raw("SELECT * FROM full_article").Scan(rsMap).Error; err != nil {
 		logrus.Warn("Get article list failed", err)
 		return nil, false
 	}
-	return articles, true
+
+	return article, true
 }
 
 func GetArticleOrderByTime() ([]Article, bool) {
@@ -64,6 +111,7 @@ func GetArticleOrderByTime() ([]Article, bool) {
 }
 
 func GetArticleById(id uint32) (*Article, bool) {
+
 	article := &Article{}
 	if err := database.DB.Model(&model.ArticleModel{}).Where("id = ?", id).
 		Preload("Tags").
@@ -112,7 +160,26 @@ func GetArticleByCategoryId(categoryId uint32) ([]Article, bool) {
 		logrus.Warn("Get article list failed", err)
 		return nil, false
 	}
+
 	return articles, true
+}
+
+func UpdateArticle(article *model.ArticleModel) bool {
+
+	if err := database.DB.Model(&model.ArticleModel{}).Where("id = ?", article.Id).Updates(article).Error; err != nil {
+		logrus.Warn("Update article failed", err)
+		return false
+	}
+	return true
+}
+
+func CreateTag(tag *model.TagModel) bool {
+
+	if err := database.DB.Create(tag).Error; err != nil {
+		logrus.Warn("Create tag failed", err)
+		return false
+	}
+	return true
 }
 
 func GetTags() ([]model.TagModel, bool) {
@@ -125,6 +192,15 @@ func GetTags() ([]model.TagModel, bool) {
 	return tags, true
 }
 
+func CreateCategory(category *model.CategoryModel) bool {
+
+	if err := database.DB.Create(category).Error; err != nil {
+		logrus.Warn("Create category failed", err)
+		return false
+	}
+	return true
+}
+
 func GetCategories() ([]model.CategoryModel, bool) {
 
 	var categories []model.CategoryModel
@@ -135,10 +211,17 @@ func GetCategories() ([]model.CategoryModel, bool) {
 	return categories, true
 }
 
-func UpdateArticle(article *model.ArticleModel) bool {
-	if err := database.DB.Model(&model.ArticleModel{}).Where("id = ?", article.Id).Updates(article).Error; err != nil {
-		logrus.Warn("Update article failed", err)
-		return false
+func (a *Article) String() string {
+
+	articleStr := a.ArticleModel.String()
+	tagsStr := "\n"
+	for _, tag := range a.Tags {
+		tagsStr += tag.String()
 	}
-	return true
+	categoriesStr := "\n"
+	for _, category := range a.Categories {
+		categoriesStr += category.String()
+	}
+
+	return articleStr + tagsStr + categoriesStr + "\n"
 }

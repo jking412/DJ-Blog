@@ -3,6 +3,7 @@ package model
 import (
 	"DJ-Blog/pkg/database"
 	"DJ-Blog/pkg/encrypt"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"time"
@@ -44,4 +45,14 @@ func (u *UserModel) BeforeSave(tx *gorm.DB) error {
 
 	u.Password = encrypt.EncryptPassword(u.Password)
 	return nil
+}
+
+func (u *UserModel) String() string {
+	return fmt.Sprintf("UserModel{Id:%d, CreatedAt:%s, UpdatedAt:%s, Username:%s, Password:%s, AvatarUrl:%s}\n",
+		u.Id,
+		u.CreatedAt,
+		u.UpdatedAt,
+		u.Username,
+		u.Password,
+		u.AvatarUrl)
 }

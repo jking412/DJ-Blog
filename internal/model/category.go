@@ -2,6 +2,7 @@ package model
 
 import (
 	"DJ-Blog/pkg/database"
+	"fmt"
 	"github.com/sirupsen/logrus"
 )
 
@@ -36,4 +37,8 @@ func (c *CategoryModel) Update() bool {
 		return false
 	}
 	return true
+}
+
+func (c *CategoryModel) String() string {
+	return fmt.Sprintf("CategoryModel{Id:%d,Name:%s}\n", c.Id, c.Name)
 }
