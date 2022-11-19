@@ -11,10 +11,6 @@ type TagModel struct {
 	Name string `gorm:"column:name"`
 }
 
-func (t *TagModel) TableName() string {
-	return "article_tag"
-}
-
 func (t *TagModel) Create() bool {
 	if err := database.DB.Create(t).Error; err != nil {
 		logrus.Warn("Create tag failed", t)

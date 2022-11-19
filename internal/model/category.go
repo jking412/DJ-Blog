@@ -11,10 +11,6 @@ type CategoryModel struct {
 	Name string `gorm:"column:name"`
 }
 
-func (c *CategoryModel) TableName() string {
-	return "article_category"
-}
-
 func (c *CategoryModel) Create() bool {
 	if err := database.DB.Create(c).Error; err != nil {
 		logrus.Warn("Create category failed", c)

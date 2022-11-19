@@ -10,7 +10,7 @@ import (
 
 type User struct {
 	model.UserModel `json:"user,omitempty"`
-	Articles        []Article `json:"articles,omitempty" gorm:"-"`
+	Articles        []Article `json:"articles,omitempty" gorm:"foreignKey:UserId"`
 }
 
 func CreateUser(user *model.UserModel) *User {

@@ -40,23 +40,23 @@ func ArticleCreate(req *request.ArticleCreateReq) (interface{}, bool) {
 		return errs, false
 	}
 
-	article := &model.ArticleModel{
-		Title:         req.Title,
-		OriginContent: req.OriginContent,
-		ParseContent:  req.ParseContent,
-		ImgUrl:        req.ImgUrl,
-		CreatedAt:     time.Now(),
-		UpdatedAt:     time.Now(),
-		UserId:        req.UserId,
-	}
+	//article := &model.ArticleModel{
+	//	Title:         req.Title,
+	//	OriginContent: req.OriginContent,
+	//	ParseContent:  req.ParseContent,
+	//	ImgUrl:        req.ImgUrl,
+	//	CreatedAt:     time.Now(),
+	//	UpdatedAt:     time.Now(),
+	//	UserId:        req.UserId,
+	//}
 
 	var serviceArticle *service.Article
-
-	if serviceArticle = service.CreateArticle(article); serviceArticle.Id == 0 {
-		logrus.Error("服务器创建文章失败")
-		errs["server"] = []string{"服务器创建文章失败"}
-		return errs, false
-	}
+	//
+	//if serviceArticle = service.CreateArticle(article); serviceArticle.Id == 0 {
+	//	logrus.Error("服务器创建文章失败")
+	//	errs["server"] = []string{"服务器创建文章失败"}
+	//	return errs, false
+	//}
 
 	return serviceArticle, true
 }

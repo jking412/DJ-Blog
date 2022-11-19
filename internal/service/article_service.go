@@ -10,8 +10,8 @@ import (
 // 用于处理业务逻辑，也用于处理和返回数据
 type Article struct {
 	*model.ArticleModel `json:"article,omitempty"`
-	Tags                []model.TagModel      `json:"tags,omitempty" gorm:"-"`
-	Categories          []model.CategoryModel `json:"categories,omitempty" gorm:"-"`
+	Tags                []model.TagModel      `json:"tags,omitempty" gorm:"many2many:article_tag_relation"`
+	Categories          []model.CategoryModel `json:"categories,omitempty" gorm:"many2many:article_category_relation"`
 }
 
 type ArticleTagRelation struct {
@@ -87,7 +87,7 @@ func DeleteArticleById(id uint32) bool {
 func GetArticleList() ([]Article, bool) {
 
 	article := make([]Article, 0)
-	rsMap := make(map[string][]interface{})
+	rsMap := make(map[string]interface{})
 	if err := database.DB.Raw("SELECT * FROM full_article").Scan(rsMap).Error; err != nil {
 		logrus.Warn("Get article list failed", err)
 		return nil, false
