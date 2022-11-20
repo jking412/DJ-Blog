@@ -14,52 +14,12 @@ type Article struct {
 	Categories          []model.CategoryModel `json:"categories,omitempty" gorm:"many2many:article_category_relation"`
 }
 
-type ArticleTagRelation struct {
-	ArticleId uint32 `gorm:"column:article_id"`
-	TagId     uint32 `gorm:"column:tag_id"`
-}
-
-type ArticleCategoryRelation struct {
-	ArticleId  uint32 `gorm:"column:article_id"`
-	CategoryId uint32 `gorm:"column:category_id"`
-}
-
-func (a *ArticleTagRelation) TableName() string {
-	return "article_tag_relation"
-}
-
-func (a *ArticleCategoryRelation) TableName() string {
-	return "article_category_relation"
-}
-
 func CreateArticle(article *Article) *Article {
 
 	if err := database.DB.Create(article).Error; err != nil {
 		logrus.Warn("Create article failed", err)
 		return nil
 	}
-
-	database.DB.Raw("SELECT LAST_INSERT_ID()").Scan(&article.Id)
-
-	articleTagRelation := make([]ArticleTagRelation, 0)
-	for _, tag := range article.Tags {
-		articleTagRelation = append(articleTagRelation, ArticleTagRelation{
-			ArticleId: article.Id,
-			TagId:     tag.Id,
-		})
-	}
-
-	database.DB.Create(articleTagRelation)
-
-	articleCategoryRelation := make([]ArticleCategoryRelation, 0)
-	for _, category := range article.Categories {
-		articleCategoryRelation = append(articleCategoryRelation, ArticleCategoryRelation{
-			ArticleId:  article.Id,
-			CategoryId: category.Id,
-		})
-	}
-
-	database.DB.Create(articleCategoryRelation)
 
 	return article
 }
@@ -71,29 +31,21 @@ func DeleteArticleById(id uint32) bool {
 		return false
 	}
 
-	if err := database.DB.Table("article_tag_relation").Where("article_id = ?", id).Delete(&ArticleTagRelation{}).Error; err != nil {
-		logrus.Warn("Delete article tag relation failed", err)
-		return false
-	}
-
-	if err := database.DB.Table("article_category_relation").Where("article_id = ?", id).Delete(&ArticleCategoryRelation{}).Error; err != nil {
-		logrus.Warn("Delete article category relation failed", err)
-		return false
-	}
-
 	return true
 }
 
 func GetArticleList() ([]Article, bool) {
 
-	article := make([]Article, 0)
-	rsMap := make(map[string]interface{})
-	if err := database.DB.Raw("SELECT * FROM full_article").Scan(rsMap).Error; err != nil {
+	var articles []Article
+	if err := database.DB.Model(&model.ArticleModel{}).
+		Preload("Tags").
+		Preload("Categories").
+		Find(articles).Error; err != nil {
 		logrus.Warn("Get article list failed", err)
 		return nil, false
 	}
 
-	return article, true
+	return articles, true
 }
 
 func GetArticleOrderByTime() ([]Article, bool) {
@@ -107,12 +59,13 @@ func GetArticleOrderByTime() ([]Article, bool) {
 		logrus.Warn("Get article list failed", err)
 		return nil, false
 	}
+
 	return articles, true
 }
 
 func GetArticleById(id uint32) (*Article, bool) {
 
-	article := &Article{}
+	var article *Article
 	if err := database.DB.Model(&model.ArticleModel{}).Where("id = ?", id).
 		Preload("Tags").
 		Preload("Categories").
@@ -125,22 +78,24 @@ func GetArticleById(id uint32) (*Article, bool) {
 
 func GetArticleByTitle(title string) (*Article, bool) {
 
-	article := &Article{}
+	var article *Article
 	if err := database.DB.Model(&model.ArticleModel{}).Where("title = ?", title).
 		Preload("Tags").
 		Preload("Categories").
-		First(&article).Error; err != nil {
+		First(article).Error; err != nil {
 		logrus.Warn("Get article failed", err)
 		return nil, false
 	}
 	return article, true
 }
 
+// TODO: 下面的service层代码都待修改
+
 func GetArticleByTagId(tagId uint32) ([]Article, bool) {
 
 	var articles []Article
 	if err := database.DB.Model(&model.ArticleModel{}).
-		Joins("join article_tag_relation on tag_id = ?", tagId).
+		Preload("").
 		Where("article.id = article_id").
 		Find(articles).Error; err != nil {
 		logrus.Warn("Get article list failed", err)

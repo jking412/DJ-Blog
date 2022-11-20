@@ -41,6 +41,8 @@ func UserRegister(req *request.UserRegisterReq) (interface{}, bool) {
 		return errs, false
 	}
 
+	serviceUser.Password = ""
+
 	return serviceUser, true
 }
 
@@ -52,12 +54,14 @@ func UserLogin(req *request.UserLoginReq) (interface{}, bool) {
 		return errs, false
 	}
 
-	user, ok := service.GetUserByUsername(req.Username)
+	serviceUser, ok := service.GetUserByUsername(req.Username)
 	if !ok {
 		logrus.Error("服务器获取用户失败")
 		errs["server"] = []string{"服务器获取用户失败"}
 		return errs, false
 	}
 
-	return user, true
+	serviceUser.Password = ""
+
+	return serviceUser, true
 }

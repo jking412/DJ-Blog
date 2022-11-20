@@ -20,18 +20,14 @@ func CreateUser(user *model.UserModel) *User {
 	//	return false
 	//}
 
-	err := database.DB.Exec("INSERT INTO user (username, password, created_at, updated_at, avatar_url) VALUES (?, ?, ?, ?, ?)",
-		user.Username,
-		user.Password,
-		time.Now(),
-		time.Now(),
-		user.AvatarUrl).Error
-
 	serviceUser := &User{
 		UserModel: *user,
 	}
 
-	if err != nil {
+	serviceUser.UpdatedAt = time.Now()
+	serviceUser.CreatedAt = time.Now()
+
+	if err := database.DB.Model(&User{}).Create(serviceUser).Error; err != nil {
 		logrus.Error("Create user failed", err)
 		return serviceUser
 	}

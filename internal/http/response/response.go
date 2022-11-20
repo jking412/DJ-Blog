@@ -1,23 +1,23 @@
 package response
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 var (
 
 	// OK is a successful response
-	// 20000 - 29999 表示请求成功
-	OK = NewStatus(20000, "操作成功")
+	OK = NewStatus(http.StatusOK, "操作成功")
 
 	// BadRequest is a bad request
-	// 40000 - 49999 为用户端错误
-	BadRequest         = NewStatus(40000, "请求错误")
-	UnprocessableData  = NewStatus(40001, "数据格式错误")
-	UnsatisfiedRequest = NewStatus(40002, "请求参数不满足要求")
-	Unauthorized       = NewStatus(40003, "未授权")
+	BadRequest         = NewStatus(http.StatusBadRequest, "请求错误")
+	UnprocessableData  = NewStatus(http.StatusUnprocessableEntity, "数据格式错误")
+	UnsatisfiedRequest = NewStatus(http.StatusUnprocessableEntity, "请求参数不满足要求")
+	Unauthorized       = NewStatus(http.StatusUnauthorized, "未授权")
 
 	// InternalServerError is a internal server error
-	// 50000 - 59999 为服务器端错误
-	InternalServerError = NewStatus(50000, "服务器内部错误")
+	InternalServerError = NewStatus(http.StatusInternalServerError, "服务器内部错误")
 )
 
 type Status struct {

@@ -1,16 +1,15 @@
 package middleware
 
-//func Auth() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		user := session.GetUser(c)
-//		if user == nil {
-//			c.JSON(http.StatusUnauthorized, gin.H{
-//				"msg": "未登录",
-//			})
-//			c.Abort()
-//		} else {
-//			session.FlushSession(c)
-//			c.Next()
-//		}
-//	}
-//}
+import (
+	"DJ-Blog/pkg/session"
+	"fmt"
+	"github.com/gin-gonic/gin"
+)
+
+func Auth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user := session.GetUser(c)
+		fmt.Println(user)
+		c.Next()
+	}
+}

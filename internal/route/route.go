@@ -3,6 +3,7 @@ package route
 import (
 	_ "DJ-Blog/docs"
 	"DJ-Blog/internal/controller"
+	"DJ-Blog/internal/middleware"
 	"DJ-Blog/pkg/session"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,9 @@ import (
 
 func RegisterRoutes(r *gin.Engine) {
 	r.Use(sessions.Sessions("DJ-Blog", session.Store))
+
+	r.Use(middleware.Auth())
+	r.Use(middleware.Cors())
 
 	r.Any("/ping", Ping)
 
