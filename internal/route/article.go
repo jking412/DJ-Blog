@@ -15,7 +15,7 @@ func registerArticleRoutes(r *gin.Engine, articleController core.IArticleControl
 	articleGroup.GET("/:id", articleController.ShowArticleDetail)
 	articleGroup.GET("/time", articleController.ShowArticleByTime)
 	articleGroup.GET("/tag/:id", articleController.ShowArticleByTag)
-	articleGroup.GET("/category/:id", articleController.ShowByArticleCategory)
+	articleGroup.GET("/category/:id", articleController.ShowArticleByCategory)
 
 	articleGroup.GET("/search", articleController.Search)
 

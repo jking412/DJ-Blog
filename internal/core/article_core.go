@@ -18,7 +18,7 @@ type IArticleController interface {
 	ShowArticleDetail(c *gin.Context)
 	ShowArticleByTime(c *gin.Context)
 	ShowArticleByTag(c *gin.Context)
-	ShowByArticleCategory(c *gin.Context)
+	ShowArticleByCategory(c *gin.Context)
 
 	Search(c *gin.Context)
 }

@@ -19,8 +19,18 @@ func NewArticleController() *ArticleController {
 	return new(ArticleController)
 }
 
-// Pass
-
+// Create godoc
+// @Summary 创建文章
+// @Description 创建文章
+// @Tags Article
+// @Accept  json
+// @Produce  json
+// @Param ArticleCreateRequest body request.ArticleCreateReq true "文章信息"
+// @Success 200 {object} response.Status{data=service.Article} "ok"
+// @Failure 401 {object} response.Status "Unauthorized"
+// @Failure 422 {object} response.Status "Unprocessable Entity"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article [post]
 func (a *ArticleController) Create(c *gin.Context) {
 
 	req := &request.ArticleCreateReq{}
@@ -45,8 +55,18 @@ func (a *ArticleController) Create(c *gin.Context) {
 	response.EndWithOK(c, serviceArticle)
 }
 
-// Pass
-
+// Delete godoc
+// @Summary 删除文章
+// @Description 删除文章
+// @Tags Article
+// @Accept  json
+// @Produce  json
+// @Param id path int true "文章ID"
+// @Success 200 {object} response.Status{data=uint32} "ok"
+// @Failure 401 {object} response.Status "Unauthorized"
+// @Failure 422 {object} response.Status "Unprocessable Entity"'
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article/{id} [delete]
 func (a *ArticleController) Delete(c *gin.Context) {
 	articleId, err := strconv.ParseUint(c.Param("id"), 10, 32)
 
@@ -66,8 +86,18 @@ func (a *ArticleController) Delete(c *gin.Context) {
 	response.EndWithOK(c, articleId)
 }
 
-// Pass
-
+// Index godoc
+// @Summary 获取文章列表
+// @Description 获取文章列表
+// @Tags Article
+// @Param pageNum query int true "页码"
+// @Param pageSize query int true "每页数量"
+// @Success 200 {object} response.Status{data=[]service.Article} "ok"
+// @Failure 400 {object} response.Status "Bad Request"
+// @Failure 401 {object} response.Status "Unauthorized"
+// @Failure 422 {object} response.Status "Unprocessable Entity"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article [get]
 func (a *ArticleController) Index(c *gin.Context) {
 
 	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
@@ -106,8 +136,19 @@ func (a *ArticleController) Index(c *gin.Context) {
 	response.EndWithOK(c, articles)
 }
 
-// Pass
-
+// Update godoc
+// @Summary 更新文章
+// @Description 更新文章
+// @Tags Article
+// @Accept  json
+// @Produce  json
+// @Param id path int true "文章ID"
+// @Param ArticleUpdateRequest body request.ArticleUpdateReq true "文章信息"
+// @Success 200 {object} response.Status{data=service.Article} "ok"
+// @Failure 401 {object} response.Status "Unauthorized"
+// @Failure 422 {object} response.Status "Unprocessable Entity"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article/{id} [put]
 func (a *ArticleController) Update(c *gin.Context) {
 	articleId, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	req := &request.ArticleUpdateReq{}
@@ -140,8 +181,17 @@ func (a *ArticleController) Update(c *gin.Context) {
 	response.EndWithOK(c, serviceArticle)
 }
 
-// Pass
-
+// ShowArticleDetail godoc
+// @Summary 获取文章详情
+// @Description 获取文章详情
+// @Tags Article
+// @Param id path int true "文章ID"
+// @Success 200 {object} response.Status{data=service.Article} "ok"
+// @Failure 400 {object} response.Status "Bad Request"
+// @Failure 401 {object} response.Status "Unauthorized"
+// @Failure 422 {object} response.Status "Unprocessable Entity"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article/{id} [get]
 func (a *ArticleController) ShowArticleDetail(c *gin.Context) {
 
 	articleId, err := strconv.ParseUint(c.Param("id"), 10, 32)
@@ -167,8 +217,18 @@ func (a *ArticleController) ShowArticleDetail(c *gin.Context) {
 	response.EndWithOK(c, article)
 }
 
-// Pass
-
+// ShowArticleByTime godoc
+// @Summary 根据时间获取文章列表
+// @Description 根据文章创建时间由新到旧获取文章列表
+// @Tags Article
+// @Param pageNum query int true "页码"
+// @Param pageSize query int true "每页数量"
+// @Success 200 {object} response.Status{data=[]service.Article} "ok"
+// @Failure 400 {object} response.Status "Bad Request"
+// @Failure 401 {object} response.Status "Unauthorized"
+// @Failure 422 {object} response.Status "Unprocessable Entity"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article/time [get]
 func (a *ArticleController) ShowArticleByTime(c *gin.Context) {
 
 	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
@@ -207,8 +267,19 @@ func (a *ArticleController) ShowArticleByTime(c *gin.Context) {
 	response.EndWithOK(c, articles)
 }
 
-// Pass
-
+// ShowArticleByTag godoc
+// @Summary 根据标签获取文章列表
+// @Description 根据标签获取文章列表
+// @Tags Article
+// @Param id path int true "标签的ID"
+// @Param pageNum query int true "页码"
+// @Param pageSize query int true "每页数量"
+// @Success 200 {object} response.Status{data=[]service.Article} "ok"
+// @Failure 400 {object} response.Status "Bad Request"
+// @Failure 401 {object} response.Status "Unauthorized"
+// @Failure 422 {object} response.Status "Unprocessable Entity"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article/tag/{id} [get]
 func (a *ArticleController) ShowArticleByTag(c *gin.Context) {
 
 	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
@@ -254,9 +325,20 @@ func (a *ArticleController) ShowArticleByTag(c *gin.Context) {
 	response.EndWithOK(c, articles)
 }
 
-// Pass
-
-func (a *ArticleController) ShowByArticleCategory(c *gin.Context) {
+// ShowArticleByCategory godoc
+// @Summary 根据分类获取文章列表
+// @Description 根据分类获取文章列表
+// @Tags Article
+// @Param id path int true "分类的ID"
+// @Param pageNum query int true "页码"
+// @Param pageSize query int true "每页数量"
+// @Success 200 {object} response.Status{data=[]service.Article} "ok"
+// @Failure 400 {object} response.Status "Bad Request"
+// @Failure 401 {object} response.Status "Unauthorized"
+// @Failure 422 {object} response.Status "Unprocessable Entity"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article/category/{id} [get]
+func (a *ArticleController) ShowArticleByCategory(c *gin.Context) {
 
 	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
 	if err != nil {
@@ -301,8 +383,19 @@ func (a *ArticleController) ShowByArticleCategory(c *gin.Context) {
 	response.EndWithOK(c, articles)
 }
 
-// Pass
-
+// Search godoc
+// @Summary 搜索文章
+// @Description 通过关键词搜索文章
+// @Tags Article
+// @Param keyword query string true "关键词"
+// @Param pageNum query int true "页码"
+// @Param pageSize query int true "每页数量"
+// @Success 200 {object} response.Status{data=[]service.Article} "ok"
+// @Failure 400 {object} response.Status "Bad Request"
+// @Failure 401 {object} response.Status "Unauthorized"
+// @Failure 422 {object} response.Status "Unprocessable Entity"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article/search [get]
 func (a *ArticleController) Search(c *gin.Context) {
 
 	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
@@ -326,6 +419,12 @@ func (a *ArticleController) Search(c *gin.Context) {
 
 	keyword := c.Query("keyword")
 
+	if keyword == "" {
+		logrus.Info("关键词不能为空")
+		response.EndWithBadRequest(c, nil)
+		return
+	}
+
 	articles, ok := service.SearchArticle(keyword)
 	if !ok {
 		logrus.Info("获取文章列表失败")
@@ -343,8 +442,13 @@ func (a *ArticleController) Search(c *gin.Context) {
 	response.EndWithOK(c, articles)
 }
 
-// Pass
-
+// ShowTags godoc
+// @Summary 获取所有标签
+// @Description 获取所有标签
+// @Tags Article
+// @Success 200 {object} response.Status{data=[]model.TagModel} "ok"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /article/tag [get]
 func (a *ArticleController) ShowTags(c *gin.Context) {
 
 	tags, ok := service.GetTags()
@@ -357,8 +461,13 @@ func (a *ArticleController) ShowTags(c *gin.Context) {
 	response.EndWithOK(c, tags)
 }
 
-// Pass
-
+// ShowCategories godoc
+// @Summary 获取所有分类
+// @Description 获取所有分类
+// @Tags Article
+// @Success 200 {object} response.Status{data=[]model.CategoryModel} "ok"
+// @Failure 500 {object} response.Status "Internal Server Error"
+// @Router /category [get]
 func (a *ArticleController) ShowCategories(c *gin.Context) {
 
 	categories, ok := service.GetCategories()

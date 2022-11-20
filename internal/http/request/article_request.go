@@ -22,12 +22,12 @@ type PaginationReq struct {
 }
 
 type ArticleUpdateReq struct {
-	Id            uint32   `valid:"id" json:"id,omitempty" example:"required"`
+	Id            uint32   `valid:"id" json:"id,omitempty"`
 	Title         string   `valid:"title" json:"title,omitempty" example:"required"`
 	OriginContent string   `valid:"originContent" json:"originContent,omitempty" example:"required"`
 	ParseContent  string   `valid:"parseContent" json:"parseContent,omitempty" example:"required"`
 	ImgUrl        string   `json:"imgUrl,omitempty"`
-	UserId        uint32   `json:"-"`
+	UserId        uint32   `json:"-" example:"empty"`
 	Tags          []uint32 `json:"tags,omitempty"`
 	Categories    []uint32 `json:"categories,omitempty"`
 }

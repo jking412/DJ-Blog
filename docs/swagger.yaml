@@ -1,4 +1,64 @@
 definitions:
+  model.CategoryModel:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.TagModel:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  request.ArticleCreateReq:
+    properties:
+      categories:
+        items:
+          type: integer
+        type: array
+      imgUrl:
+        type: string
+      originContent:
+        example: required
+        type: string
+      parseContent:
+        example: required
+        type: string
+      tags:
+        items:
+          type: integer
+        type: array
+      title:
+        example: required
+        type: string
+    type: object
+  request.ArticleUpdateReq:
+    properties:
+      categories:
+        items:
+          type: integer
+        type: array
+      id:
+        type: integer
+      imgUrl:
+        type: string
+      originContent:
+        example: required
+        type: string
+      parseContent:
+        example: required
+        type: string
+      tags:
+        items:
+          type: integer
+        type: array
+      title:
+        example: required
+        type: string
+    type: object
   request.UserLoginReq:
     properties:
       password:
@@ -31,8 +91,39 @@ definitions:
       msg:
         type: string
     type: object
+  service.Article:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/model.CategoryModel'
+        type: array
+      createdAt:
+        type: string
+      id:
+        type: integer
+      imgUrl:
+        type: string
+      originContent:
+        type: string
+      parseContent:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/model.TagModel'
+        type: array
+      title:
+        type: string
+      updatedAt:
+        type: string
+      userId:
+        type: integer
+    type: object
   service.User:
     properties:
+      articles:
+        items:
+          $ref: '#/definitions/service.Article'
+        type: array
       avatarUrl:
         example: https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png
         type: string
@@ -58,6 +149,446 @@ info:
   title: DJ-Blog API文档
   version: "1.0"
 paths:
+  /article:
+    get:
+      description: 获取文章列表
+      parameters:
+      - description: 页码
+        in: query
+        name: pageNum
+        required: true
+        type: integer
+      - description: 每页数量
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/service.Article'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Status'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Status'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 获取文章列表
+      tags:
+      - Article
+    post:
+      consumes:
+      - application/json
+      description: 创建文章
+      parameters:
+      - description: 文章信息
+        in: body
+        name: ArticleCreateRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.ArticleCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  $ref: '#/definitions/service.Article'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Status'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 创建文章
+      tags:
+      - Article
+  /article/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除文章
+      parameters:
+      - description: 文章ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  type: integer
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Status'
+        "422":
+          description: Unprocessable Entity"'
+          schema:
+            $ref: '#/definitions/response.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 删除文章
+      tags:
+      - Article
+    get:
+      description: 获取文章详情
+      parameters:
+      - description: 文章ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  $ref: '#/definitions/service.Article'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Status'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Status'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 获取文章详情
+      tags:
+      - Article
+    put:
+      consumes:
+      - application/json
+      description: 更新文章
+      parameters:
+      - description: 文章ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 文章信息
+        in: body
+        name: ArticleUpdateRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.ArticleUpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  $ref: '#/definitions/service.Article'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Status'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 更新文章
+      tags:
+      - Article
+  /article/category/{id}:
+    get:
+      description: 根据分类获取文章列表
+      parameters:
+      - description: 分类的ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 页码
+        in: query
+        name: pageNum
+        required: true
+        type: integer
+      - description: 每页数量
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/service.Article'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Status'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Status'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 根据分类获取文章列表
+      tags:
+      - Article
+  /article/search:
+    get:
+      description: 通过关键词搜索文章
+      parameters:
+      - description: 关键词
+        in: query
+        name: keyword
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: pageNum
+        required: true
+        type: integer
+      - description: 每页数量
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/service.Article'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Status'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Status'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 搜索文章
+      tags:
+      - Article
+  /article/tag:
+    get:
+      description: 获取所有标签
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.TagModel'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 获取所有标签
+      tags:
+      - Article
+  /article/tag/{id}:
+    get:
+      description: 根据标签获取文章列表
+      parameters:
+      - description: 标签的ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 页码
+        in: query
+        name: pageNum
+        required: true
+        type: integer
+      - description: 每页数量
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/service.Article'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Status'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Status'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 根据标签获取文章列表
+      tags:
+      - Article
+  /article/time:
+    get:
+      description: 根据文章创建时间由新到旧获取文章列表
+      parameters:
+      - description: 页码
+        in: query
+        name: pageNum
+        required: true
+        type: integer
+      - description: 每页数量
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/service.Article'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Status'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Status'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 根据时间获取文章列表
+      tags:
+      - Article
+  /category:
+    get:
+      description: 获取所有分类
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Status'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.CategoryModel'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Status'
+      summary: 获取所有分类
+      tags:
+      - Article
   /user/login:
     post:
       consumes:
@@ -66,14 +597,14 @@ paths:
       parameters:
       - description: 用户登录请求
         in: body
-        name: userLoginRequest
+        name: UserLoginRequest
         required: true
         schema:
           $ref: '#/definitions/request.UserLoginReq'
       produces:
       - application/json
       responses:
-        "20000":
+        "200":
           description: 登录成功
           schema:
             allOf:
@@ -82,28 +613,28 @@ paths:
                 data:
                   $ref: '#/definitions/service.User'
               type: object
-        "40001":
+        "401":
           description: 请求参数格式错误
           schema:
             $ref: '#/definitions/response.Status'
-        "40002":
+        "402":
           description: 请求参数不符合要求
           schema:
             $ref: '#/definitions/response.Status'
       summary: 用户登录
       tags:
-      - 用户
+      - user
   /user/logout:
     get:
       description: 退出登录
       responses:
-        "20000":
+        "200":
           description: 退出成功
           schema:
             $ref: '#/definitions/response.Status'
       summary: 退出登录
       tags:
-      - 用户
+      - User
   /user/register:
     post:
       consumes:
@@ -119,7 +650,7 @@ paths:
       produces:
       - application/json
       responses:
-        "20000":
+        "200":
           description: 注册成功
           schema:
             allOf:
@@ -128,15 +659,15 @@ paths:
                 data:
                   $ref: '#/definitions/service.User'
               type: object
-        "40001":
+        "401":
           description: 请求参数格式错误
           schema:
             $ref: '#/definitions/response.Status'
-        "40002":
+        "402":
           description: 请求参数不符合要求
           schema:
             $ref: '#/definitions/response.Status'
       summary: 用户注册
       tags:
-      - 用户
+      - User
 swagger: "2.0"
