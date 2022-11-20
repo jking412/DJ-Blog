@@ -26,9 +26,6 @@ RUN go build -o main .
 ###################
 FROM ubuntu:latest
 
-COPY ./views /views
-COPY ./static /static
-
 # 从builder镜像中把/dist/app 拷贝到当前目录
 COPY --from=builder /build/main /
 

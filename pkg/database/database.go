@@ -6,6 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"time"
 )
 
 type dsn struct {
@@ -17,6 +18,7 @@ type dsn struct {
 }
 
 var DB *gorm.DB
+var loadCount = 0
 
 func init() {
 	d := dsn{
@@ -28,9 +30,17 @@ func init() {
 	}
 	var err error
 	DB, err = gorm.Open(mysql.Open(d.String()), &gorm.Config{})
-	if err != nil {
-		logrus.Panic("dsn ", d.String())
-		return
+	for {
+		// 在docker部署中由于数据库的初始化需要一定的时间(即便配置了数据库比Go程序先运行)
+		// 过快的连接会导致失败，所以可以多尝试几次
+		if err != nil && loadCount < 5 {
+			d.Host = "mysql"
+			loadCount++
+			time.Sleep(time.Second)
+			DB, err = gorm.Open(mysql.Open(d.String()), &gorm.Config{})
+		} else {
+			break
+		}
 	}
 	logrus.Info("Database connected")
 }

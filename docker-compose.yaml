@@ -8,7 +8,6 @@ services:
       - "D:/DJ-Blog/config:/config"
     depends_on:
       - mysql
-      - search
     ports:
       - "8000:8000"
   mysql:
@@ -18,14 +17,5 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: dj_blog
-
-  search:
-    image: public.ecr.aws/zinclabs/zinc:latest
-    volumes:
-      - "D:/DJ-Blog/data:/data"
-    environment:
-      ZINC_FIRST_ADMIN_USER: admin
-      ZINC_FIRST_ADMIN_PASSWORD: admin123456
-      ZINC_DATA_PATH: /data
 
 
