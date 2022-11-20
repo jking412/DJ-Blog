@@ -123,14 +123,23 @@ func GetArticleByCategoryId(categoryId uint32) ([]Article, bool) {
 
 	var articles []Article
 	if err := database.DB.Model(&Article{}).
-		Joins("join article_category_relation on category_id = ?", categoryId).
-		Where("article.id = article_id").
-		Find(articles).Error; err != nil {
+		Preload("Tags").
+		Preload("Categories").
+		Find(&articles).Error; err != nil {
 		logrus.Warn("Get article list failed", err)
 		return nil, false
 	}
 
-	return articles, true
+	var newArticles []Article
+	for _, article := range articles {
+		for _, category := range article.Categories {
+			if category.Id == categoryId {
+				newArticles = append(newArticles, article)
+			}
+		}
+	}
+
+	return newArticles, true
 }
 
 func UpdateArticle(article *Article) bool {
@@ -189,6 +198,21 @@ func IsExistArticleById(id uint32) bool {
 		return false
 	}
 	return count > 0
+}
+
+func SearchArticle(keyword string) ([]Article, bool) {
+
+	var articles []Article
+	if err := database.DB.Model(&Article{}).
+		Preload("Tags").
+		Preload("Categories").
+		Where("title LIKE ? or origin_content LIKE ?", "%"+keyword+"%", "%"+keyword+"%").
+		Find(&articles).Error; err != nil {
+		logrus.Warn("Search article failed", err)
+		return nil, false
+	}
+
+	return articles, true
 }
 
 func (a *Article) String() string {

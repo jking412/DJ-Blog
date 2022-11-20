@@ -42,6 +42,22 @@ const App = () => {
     request.articleByTagId()
   }
 
+  const articleByCategoryId = () => {
+    request.articleByCategoryId()
+  }
+
+  const showTags = () => {
+    request.showTags()
+  }
+
+  const showCategories = () => {
+    request.showCategories()
+  }
+
+  const search = () => {
+    request.search()
+  }
+
   return (
     <div>
       <button onClick={register}>register</button>
@@ -63,6 +79,14 @@ const App = () => {
       <button onClick={articleOrderByTime}>articleOrderByTime</button>
       <div></div>
       <button onClick={articleByTagId}>articleByTagId</button>
+      <div></div>
+      <button onClick={articleByCategoryId}>articleByCategoryId</button>
+      <div></div>
+      <button onClick={showTags}>showTags</button>
+      <div></div>
+      <button onClick={showCategories}>showCategories</button>
+      <div></div>
+      <button onClick={search}>search</button>
     </div>
   );
 }

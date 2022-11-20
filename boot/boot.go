@@ -15,7 +15,7 @@ func Initialize() {
 	// 1. 表名为结构体名的蛇形复数形式
 	// 2. 字段名为结构体字段名的蛇形形式
 	// 这里的数据库引擎是MYISAM，有更高的搜索效率，但是不支持事务
-	database.DB.Set("gorm:table_options", "ENGINE=MYISAM").
+	database.DB.Debug().Set("gorm:table_options", "ENGINE=MYISAM").
 		AutoMigrate(&service.User{},
 			&service.Article{},
 			&model.TagModel{},

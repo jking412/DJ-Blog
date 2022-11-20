@@ -105,6 +105,42 @@ const articleByTagId = () => {
 
 }
 
+const articleByCategoryId = () => {
+    axios.get(`${baseUrl}/article/category/1`, {
+        params: {
+            pageNum: 1,
+            pageSize: 10
+        }
+    }).then(resp => {
+        console.log(resp)
+    })
+}
+
+const showTags = () => {
+    axios.get(`${baseUrl}/tag`, {}).then(resp => {
+        console.log(resp)
+    })
+}
+
+const showCategories = () => {
+    axios.get(`${baseUrl}/category`, {}).then(resp => {
+        console.log(resp)
+    })
+}
+
+const search = () => {
+    axios.get(`${baseUrl}/article/search`, {
+        params: {
+            pageNum: 1,
+            pageSize: 10,
+            keyword: 'test2'
+        }
+    }).then(resp => {
+        console.log(resp)
+    })
+}
+
+
 
 export default {
     register,
@@ -116,5 +152,9 @@ export default {
     articleUpdate,
     articleDetail,
     articleOrderByTime,
-    articleByTagId
+    articleByTagId,
+    articleByCategoryId,
+    showTags,
+    showCategories,
+    search
 }

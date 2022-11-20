@@ -254,6 +254,8 @@ func (a *ArticleController) ShowArticleByTag(c *gin.Context) {
 	response.EndWithOK(c, articles)
 }
 
+// Pass
+
 func (a *ArticleController) ShowByArticleCategory(c *gin.Context) {
 
 	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
@@ -275,7 +277,7 @@ func (a *ArticleController) ShowByArticleCategory(c *gin.Context) {
 		PageSize: int(pageSize),
 	}
 
-	categoryId, err := strconv.ParseUint(c.Param("categoryId"), 10, 32)
+	categoryId, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		logrus.Info("分类请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
@@ -299,35 +301,9 @@ func (a *ArticleController) ShowByArticleCategory(c *gin.Context) {
 	response.EndWithOK(c, articles)
 }
 
+// Pass
+
 func (a *ArticleController) Search(c *gin.Context) {
-
-}
-
-func (a *ArticleController) ShowTags(c *gin.Context) {
-
-	tags, ok := service.GetTags()
-	if !ok {
-		logrus.Info("获取标签列表失败")
-		response.EndWithInternalServerError(c, nil)
-		return
-	}
-
-	response.EndWithOK(c, tags)
-}
-
-func (a *ArticleController) ShowCategories(c *gin.Context) {
-
-	categories, ok := service.GetCategories()
-	if !ok {
-		logrus.Info("获取分类列表失败")
-		response.EndWithInternalServerError(c, nil)
-		return
-	}
-
-	response.EndWithOK(c, categories)
-}
-
-func (a *ArticleController) ShowSpecificCategory(c *gin.Context) {
 
 	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
 	if err != nil {
@@ -348,14 +324,9 @@ func (a *ArticleController) ShowSpecificCategory(c *gin.Context) {
 		PageSize: int(pageSize),
 	}
 
-	categoryId, err := strconv.ParseUint(c.Param("categoryId"), 10, 32)
-	if err != nil {
-		logrus.Info("分类请求参数错误", err)
-		response.EndWithUnprocessableData(c, nil)
-		return
-	}
+	keyword := c.Query("keyword")
 
-	articles, ok := service.GetArticleByCategoryId(uint32(categoryId))
+	articles, ok := service.SearchArticle(keyword)
 	if !ok {
 		logrus.Info("获取文章列表失败")
 		response.EndWithInternalServerError(c, nil)
@@ -370,4 +341,32 @@ func (a *ArticleController) ShowSpecificCategory(c *gin.Context) {
 	}
 
 	response.EndWithOK(c, articles)
+}
+
+// Pass
+
+func (a *ArticleController) ShowTags(c *gin.Context) {
+
+	tags, ok := service.GetTags()
+	if !ok {
+		logrus.Info("获取标签列表失败")
+		response.EndWithInternalServerError(c, nil)
+		return
+	}
+
+	response.EndWithOK(c, tags)
+}
+
+// Pass
+
+func (a *ArticleController) ShowCategories(c *gin.Context) {
+
+	categories, ok := service.GetCategories()
+	if !ok {
+		logrus.Info("获取分类列表失败")
+		response.EndWithInternalServerError(c, nil)
+		return
+	}
+
+	response.EndWithOK(c, categories)
 }

@@ -10,37 +10,17 @@ import (
 func TestCreateArticle(t *testing.T) {
 
 	article := &Article{
-		ArticleModel: &model.ArticleModel{
+		ArticleModel: model.ArticleModel{
 			Title:         faker.Sentence(),
 			OriginContent: faker.Paragraph(),
 			ParseContent:  faker.Paragraph(),
+			ImgUrl:        faker.URL(),
 			UserId:        1,
 		},
-		Tags: []model.TagModel{
-			{
-				Id: 1,
-			},
-			{
-				Id: 2,
-			},
-		},
-		Categories: []model.CategoryModel{
-			{
-				Id: 1,
-			},
-			{
-				Id: 2,
-			},
-		},
 	}
 
-	serviceArticle := CreateArticle(article)
-
-	if serviceArticle.Id == 0 {
-		t.Error("创建文章失败")
-	}
-
-	fmt.Println(serviceArticle)
+	CreateArticle(article)
+	TestCreateArticle(t)
 }
 
 func TestDeleteArticleById(t *testing.T) {

@@ -28,6 +28,8 @@ func RegisterRoutes(r *gin.Engine) {
 
 	registerUserRoutes(r, controller.NewUserController())
 	registerArticleRoutes(r, controller.NewArticleController())
+	registerTagRoutes(r, controller.NewArticleController())
+	registerCategoryRoutes(r, controller.NewArticleController())
 
 	// 处理swagger文档的接口配置
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

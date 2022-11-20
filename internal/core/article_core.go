@@ -29,7 +29,6 @@ type ITagController interface {
 
 type ICategoryController interface {
 	ShowCategories(c *gin.Context)
-	ShowSpecificCategory(c *gin.Context)
 }
 
 func ArticleCreate(req *request.ArticleCreateReq) (interface{}, bool) {

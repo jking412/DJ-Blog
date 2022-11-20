@@ -17,7 +17,7 @@ func registerArticleRoutes(r *gin.Engine, articleController core.IArticleControl
 	articleGroup.GET("/tag/:id", articleController.ShowArticleByTag)
 	articleGroup.GET("/category/:id", articleController.ShowByArticleCategory)
 
-	articleGroup.POST("/search", articleController.Search)
+	articleGroup.GET("/search", articleController.Search)
 
 	articleGroup.DELETE("/:id", articleController.Delete)
 
@@ -31,9 +31,7 @@ func registerTagRoutes(r *gin.Engine, tagController core.ITagController) {
 }
 
 func registerCategoryRoutes(r *gin.Engine, categoryController core.ICategoryController) {
+
 	r.GET("/category", categoryController.ShowCategories)
 
-	categoryGroup := r.Group("/category")
-
-	categoryGroup.GET("/:id", categoryController.ShowSpecificCategory)
 }
