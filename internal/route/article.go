@@ -2,15 +2,17 @@ package route
 
 import (
 	"DJ-Blog/internal/core"
+	"DJ-Blog/internal/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func registerArticleRoutes(r *gin.Engine, articleController core.IArticleController) {
 
-	r.GET("/article", articleController.Index)
-	r.POST("/article", articleController.Create)
+	r.GET("/article", middleware.Auth(), articleController.Index)
+	r.POST("/article", middleware.Auth(), articleController.Create)
 
 	articleGroup := r.Group("/article")
+	articleGroup.Use(middleware.Auth())
 
 	articleGroup.GET("/:id", articleController.ShowArticleDetail)
 	articleGroup.GET("/time", articleController.ShowArticleByTime)
@@ -26,12 +28,12 @@ func registerArticleRoutes(r *gin.Engine, articleController core.IArticleControl
 
 func registerTagRoutes(r *gin.Engine, tagController core.ITagController) {
 
-	r.GET("/tag", tagController.ShowTags)
+	r.GET("/tag", middleware.Auth(), tagController.ShowTags)
 
 }
 
 func registerCategoryRoutes(r *gin.Engine, categoryController core.ICategoryController) {
 
-	r.GET("/category", categoryController.ShowCategories)
+	r.GET("/category", middleware.Auth(), categoryController.ShowCategories)
 
 }

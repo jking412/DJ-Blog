@@ -38,7 +38,7 @@ func CreateUser(user *model.UserModel) *User {
 }
 
 func DeleteUserByUsername(username string) bool {
-	if err := database.DB.Where("username = ?", username).Delete(&model.UserModel{}).Error; err != nil {
+	if err := database.DB.Where("username = ?", username).Delete(&User{}).Error; err != nil {
 		logrus.Error("Delete user failed", err)
 		return false
 	}
@@ -56,11 +56,11 @@ func GetUserById(id uint32) (*User, bool) {
 func GetUserByIdWithArticle(id uint32) (*User, bool) {
 
 	user := &User{}
-	if err := database.DB.Model(&model.UserModel{}).Where("id = ?", id).First(user).Error; err != nil {
+	if err := database.DB.Model(&User{}).Where("id = ?", id).First(user).Error; err != nil {
 		return nil, false
 	}
 
-	if err := database.DB.Model(&model.ArticleModel{}).Where("user_id = ?", id).Find(&user.Articles).Error; err != nil {
+	if err := database.DB.Model(&Article{}).Where("user_id = ?", id).Find(&user.Articles).Error; err != nil {
 		return nil, false
 	}
 	return user, true
@@ -68,7 +68,7 @@ func GetUserByIdWithArticle(id uint32) (*User, bool) {
 
 func GetUserByUsername(username string) (*User, bool) {
 	user := &User{}
-	if err := database.DB.Model(&model.UserModel{}).Where("username = ?", username).First(user).Error; err != nil {
+	if err := database.DB.Model(&User{}).Where("username = ?", username).First(user).Error; err != nil {
 		return nil, false
 	}
 	return user, true
@@ -76,7 +76,7 @@ func GetUserByUsername(username string) (*User, bool) {
 
 func IsExistUser(username string) bool {
 	var count int64
-	database.DB.Model(&model.UserModel{}).Where("username = ?", username).Count(&count)
+	database.DB.Model(&User{}).Where("username = ?", username).Count(&count)
 	return count > 0
 }
 

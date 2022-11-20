@@ -623,7 +623,7 @@ paths:
             $ref: '#/definitions/response.Status'
       summary: 用户登录
       tags:
-      - user
+      - User
   /user/logout:
     get:
       description: 退出登录

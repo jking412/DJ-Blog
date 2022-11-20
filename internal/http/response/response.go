@@ -46,6 +46,10 @@ func EndWithBadRequest(c *gin.Context, data interface{}) {
 	EndWithJSON(c, BadRequest, data)
 }
 
+func EndWithUnauthorized(c *gin.Context, data interface{}) {
+	EndWithJSON(c, Unauthorized, data)
+}
+
 func EndWithUnprocessableData(c *gin.Context, data interface{}) {
 	EndWithJSON(c, UnprocessableData, data)
 }

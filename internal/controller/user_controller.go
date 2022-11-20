@@ -24,7 +24,7 @@ func NewUserController() *UserController {
 // Login godoc
 // @Summary     用户登录
 // @Description 用户登录
-// @Tags        user
+// @Tags        User
 // @Accept      json
 // @Produce     json
 // @Param       UserLoginRequest body     request.UserLoginReq               true "用户登录请求"
