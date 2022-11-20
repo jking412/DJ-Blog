@@ -15,14 +15,13 @@ func init() {
 	// value是结构体中的字段值
 	govalidator.AddCustomRule("not_exist", func(field string, rule string, message string, value interface{}) error {
 
-		valueStr := value.(string)
 		validateField := strings.TrimPrefix(rule, "not_exist:")
 
-		if validateField == "username" && service.IsExistUser(valueStr) {
+		if validateField == "username" && service.IsExistUser(value.(string)) {
 			if message != "" {
 				return errors.New(message)
 			}
-			return fmt.Errorf("%s : %s已存在", validateField, valueStr)
+			return fmt.Errorf("%s : %s已存在", validateField, value.(string))
 		}
 
 		return nil
@@ -30,14 +29,20 @@ func init() {
 
 	govalidator.AddCustomRule("exist", func(field string, rule string, message string, value interface{}) error {
 
-		valueStr := value.(string)
 		validateField := strings.TrimPrefix(rule, "exist:")
 
-		if validateField == "username" && !service.IsExistUser(valueStr) {
+		if validateField == "username" && !service.IsExistUser(value.(string)) {
 			if message != "" {
 				return errors.New(message)
 			}
-			return fmt.Errorf("%s : %s不存在", validateField, valueStr)
+			return fmt.Errorf("%s : %s不存在", validateField, value.(string))
+		}
+
+		if validateField == "articleId" && !service.IsExistArticleById(value.(uint32)) {
+			if message != "" {
+				return errors.New(message)
+			}
+			return fmt.Errorf("%s : %d不存在", validateField, value.(uint32))
 		}
 
 		return nil

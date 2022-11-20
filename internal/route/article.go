@@ -5,14 +5,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func registerArticleRoutes(articleGroup *gin.RouterGroup, articleController core.IArticleController) {
-	articleGroup.GET("/", articleController.Index)
+func registerArticleRoutes(r *gin.Engine, articleController core.IArticleController) {
+
+	r.GET("/article", articleController.Index)
+	r.POST("/article", articleController.Create)
+
+	articleGroup := r.Group("/article")
+
 	articleGroup.GET("/:id", articleController.ShowArticleDetail)
 	articleGroup.GET("/time", articleController.ShowArticleByTime)
-	articleGroup.GET("/:id/tag", articleController.ShowArticleByTag)
-	articleGroup.GET("/:id/category", articleController.ShowByArticleCategory)
+	articleGroup.GET("/tag/:id", articleController.ShowArticleByTag)
+	articleGroup.GET("/category/:id", articleController.ShowByArticleCategory)
 
-	articleGroup.POST("/", articleController.Create)
 	articleGroup.POST("/search", articleController.Search)
 
 	articleGroup.DELETE("/:id", articleController.Delete)
@@ -20,11 +24,16 @@ func registerArticleRoutes(articleGroup *gin.RouterGroup, articleController core
 	articleGroup.PUT("/:id", articleController.Update)
 }
 
-func registerTagRoutes(tagGroup *gin.RouterGroup, tagController core.ITagController) {
-	tagGroup.GET("/", tagController.ShowTags)
+func registerTagRoutes(r *gin.Engine, tagController core.ITagController) {
+
+	r.GET("/tag", tagController.ShowTags)
+
 }
 
-func registerCategoryRoutes(categoryGroup *gin.RouterGroup, categoryController core.ICategoryController) {
-	categoryGroup.GET("/", categoryController.ShowCategories)
+func registerCategoryRoutes(r *gin.Engine, categoryController core.ICategoryController) {
+	r.GET("/category", categoryController.ShowCategories)
+
+	categoryGroup := r.Group("/category")
+
 	categoryGroup.GET("/:id", categoryController.ShowSpecificCategory)
 }

@@ -19,6 +19,8 @@ func NewArticleController() *ArticleController {
 	return new(ArticleController)
 }
 
+// Pass
+
 func (a *ArticleController) Create(c *gin.Context) {
 
 	req := &request.ArticleCreateReq{}
@@ -38,13 +40,15 @@ func (a *ArticleController) Create(c *gin.Context) {
 		return
 	}
 
-	userService := value.(*service.Article)
+	serviceArticle := value.(*service.Article)
 
-	response.EndWithOK(c, userService)
+	response.EndWithOK(c, serviceArticle)
 }
 
+// Pass
+
 func (a *ArticleController) Delete(c *gin.Context) {
-	articleId, err := strconv.ParseUint(c.Param("articleId"), 10, 32)
+	articleId, err := strconv.ParseUint(c.Param("id"), 10, 32)
 
 	if err != nil {
 		logrus.Info("删除文章请求参数错误", err)
@@ -62,14 +66,27 @@ func (a *ArticleController) Delete(c *gin.Context) {
 	response.EndWithOK(c, articleId)
 }
 
+// Pass
+
 func (a *ArticleController) Index(c *gin.Context) {
 
-	req := request.PaginationReq{}
-
-	if err := c.ShouldBindQuery(&req); err != nil {
+	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
+	if err != nil {
 		logrus.Info("分页请求参数错误", err)
-		response.EndWithUnprocessableData(c, nil)
+		response.EndWithBadRequest(c, nil)
 		return
+	}
+
+	pageSize, err := strconv.ParseInt(c.Query("pageSize"), 10, 32)
+	if err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithBadRequest(c, nil)
+		return
+	}
+
+	req := &request.PaginationReq{
+		PageNum:  int(pageNum),
+		PageSize: int(pageSize),
 	}
 
 	articles, ok := service.GetArticleList()
@@ -89,8 +106,10 @@ func (a *ArticleController) Index(c *gin.Context) {
 	response.EndWithOK(c, articles)
 }
 
+// Pass
+
 func (a *ArticleController) Update(c *gin.Context) {
-	articleId, err := strconv.ParseUint(c.Param("articleId"), 10, 32)
+	articleId, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	req := &request.ArticleUpdateReq{}
 
 	if err != nil {
@@ -121,12 +140,20 @@ func (a *ArticleController) Update(c *gin.Context) {
 	response.EndWithOK(c, serviceArticle)
 }
 
+// Pass
+
 func (a *ArticleController) ShowArticleDetail(c *gin.Context) {
 
 	articleId, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		logrus.Info("文章请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
+		return
+	}
+
+	if !service.IsExistArticleById(uint32(articleId)) {
+		logrus.Info("文章不存在")
+		response.EndWithBadRequest(c, nil)
 		return
 	}
 
@@ -140,14 +167,27 @@ func (a *ArticleController) ShowArticleDetail(c *gin.Context) {
 	response.EndWithOK(c, article)
 }
 
+// Pass
+
 func (a *ArticleController) ShowArticleByTime(c *gin.Context) {
 
-	req := request.PaginationReq{}
-
-	if err := c.ShouldBindQuery(&req); err != nil {
+	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
+	if err != nil {
 		logrus.Info("分页请求参数错误", err)
-		response.EndWithUnprocessableData(c, nil)
+		response.EndWithBadRequest(c, nil)
 		return
+	}
+
+	pageSize, err := strconv.ParseInt(c.Query("pageSize"), 10, 32)
+	if err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithBadRequest(c, nil)
+		return
+	}
+
+	req := &request.PaginationReq{
+		PageNum:  int(pageNum),
+		PageSize: int(pageSize),
 	}
 
 	articles, ok := service.GetArticleOrderByTime()
@@ -167,17 +207,30 @@ func (a *ArticleController) ShowArticleByTime(c *gin.Context) {
 	response.EndWithOK(c, articles)
 }
 
+// Pass
+
 func (a *ArticleController) ShowArticleByTag(c *gin.Context) {
 
-	req := request.PaginationReq{}
-
-	if err := c.ShouldBindQuery(&req); err != nil {
+	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
+	if err != nil {
 		logrus.Info("分页请求参数错误", err)
-		response.EndWithUnprocessableData(c, nil)
+		response.EndWithBadRequest(c, nil)
 		return
 	}
 
-	tagId, err := strconv.ParseUint(c.Param("tagId"), 10, 32)
+	pageSize, err := strconv.ParseInt(c.Query("pageSize"), 10, 32)
+	if err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithBadRequest(c, nil)
+		return
+	}
+
+	req := &request.PaginationReq{
+		PageNum:  int(pageNum),
+		PageSize: int(pageSize),
+	}
+
+	tagId, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		logrus.Info("标签请求参数错误", err)
 		response.EndWithUnprocessableData(c, nil)
@@ -203,12 +256,23 @@ func (a *ArticleController) ShowArticleByTag(c *gin.Context) {
 
 func (a *ArticleController) ShowByArticleCategory(c *gin.Context) {
 
-	req := request.PaginationReq{}
-
-	if err := c.ShouldBindQuery(&req); err != nil {
+	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
+	if err != nil {
 		logrus.Info("分页请求参数错误", err)
-		response.EndWithUnprocessableData(c, nil)
+		response.EndWithBadRequest(c, nil)
 		return
+	}
+
+	pageSize, err := strconv.ParseInt(c.Query("pageSize"), 10, 32)
+	if err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithBadRequest(c, nil)
+		return
+	}
+
+	req := &request.PaginationReq{
+		PageNum:  int(pageNum),
+		PageSize: int(pageSize),
 	}
 
 	categoryId, err := strconv.ParseUint(c.Param("categoryId"), 10, 32)
@@ -265,12 +329,23 @@ func (a *ArticleController) ShowCategories(c *gin.Context) {
 
 func (a *ArticleController) ShowSpecificCategory(c *gin.Context) {
 
-	req := request.PaginationReq{}
-
-	if err := c.ShouldBindQuery(&req); err != nil {
+	pageNum, err := strconv.ParseInt(c.Query("pageNum"), 10, 32)
+	if err != nil {
 		logrus.Info("分页请求参数错误", err)
-		response.EndWithUnprocessableData(c, nil)
+		response.EndWithBadRequest(c, nil)
 		return
+	}
+
+	pageSize, err := strconv.ParseInt(c.Query("pageSize"), 10, 32)
+	if err != nil {
+		logrus.Info("分页请求参数错误", err)
+		response.EndWithBadRequest(c, nil)
+		return
+	}
+
+	req := &request.PaginationReq{
+		PageNum:  int(pageNum),
+		PageSize: int(pageSize),
 	}
 
 	categoryId, err := strconv.ParseUint(c.Param("categoryId"), 10, 32)

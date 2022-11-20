@@ -47,7 +47,7 @@ func DeleteUserByUsername(username string) bool {
 
 func GetUserById(id uint32) (*User, bool) {
 	user := &User{}
-	if err := database.DB.Model(&model.UserModel{}).Where("id = ?", id).First(user).Error; err != nil {
+	if err := database.DB.Model(&User{}).Where("id = ?", id).First(user).Error; err != nil {
 		return nil, false
 	}
 	return user, true

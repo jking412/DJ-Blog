@@ -26,7 +26,8 @@ func RegisterRoutes(r *gin.Engine) {
 
 	r.Any("/ping", Ping)
 
-	registerUserRoutes(r.Group("/user"), controller.NewUserController())
+	registerUserRoutes(r, controller.NewUserController())
+	registerArticleRoutes(r, controller.NewArticleController())
 
 	// 处理swagger文档的接口配置
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

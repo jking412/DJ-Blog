@@ -18,10 +18,6 @@ type ArticleModel struct {
 	UserId        uint32    `gorm:"column:user_id" json:"userId,omitempty"`
 }
 
-func (a *ArticleModel) TableName() string {
-	return "articles"
-}
-
 func (a *ArticleModel) Create() bool {
 	if err := database.DB.Create(a).Error; err != nil {
 		logrus.Warn("Create article failed", a)

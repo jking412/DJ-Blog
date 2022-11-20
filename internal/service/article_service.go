@@ -9,13 +9,16 @@ import (
 // Article 是一个服务层的结构体
 // 用于处理业务逻辑，也用于处理和返回数据
 type Article struct {
-	*model.ArticleModel `json:"article,omitempty"`
-	Tags                []model.TagModel      `json:"tags,omitempty" gorm:"many2many:article_tag_relation"`
-	Categories          []model.CategoryModel `json:"categories,omitempty" gorm:"many2many:article_category_relation"`
+	// 当model.ArticleModel改为*model.ArticleModel时，gorm会有奇怪的问题
+	// example: 当调用GetArticleList()时，假如此时有10条数据，那么返回的10条数据会一模一样
+	model.ArticleModel `json:"article,omitempty"`
+	Tags               []model.TagModel      `json:"tags" gorm:"many2many:article_tag_relation"`
+	Categories         []model.CategoryModel `json:"categories" gorm:"many2many:article_category_relation"`
 }
 
 func CreateArticle(article *Article) *Article {
 
+	// 当tag和category的Id不存在时，gorm会创建name为空的tag和category
 	if err := database.DB.Create(article).Error; err != nil {
 		logrus.Warn("Create article failed", err)
 		return nil
@@ -26,7 +29,7 @@ func CreateArticle(article *Article) *Article {
 
 func DeleteArticleById(id uint32) bool {
 
-	if err := database.DB.Model(&model.ArticleModel{}).Where("id = ?", id).Delete(&model.ArticleModel{}).Error; err != nil {
+	if err := database.DB.Model(&Article{}).Where("id = ?", id).Delete(&model.ArticleModel{}).Error; err != nil {
 		logrus.Warn("Delete article failed", err)
 		return false
 	}
@@ -36,11 +39,12 @@ func DeleteArticleById(id uint32) bool {
 
 func GetArticleList() ([]Article, bool) {
 
-	var articles []Article
-	if err := database.DB.Model(&model.ArticleModel{}).
+	articles := make([]Article, 0)
+	if err := database.DB.Model(&Article{}).
 		Preload("Tags").
 		Preload("Categories").
-		Find(articles).Error; err != nil {
+		// 这里的articles如果前面不加 &会报错
+		Find(&articles).Error; err != nil {
 		logrus.Warn("Get article list failed", err)
 		return nil, false
 	}
@@ -51,11 +55,11 @@ func GetArticleList() ([]Article, bool) {
 func GetArticleOrderByTime() ([]Article, bool) {
 
 	var articles []Article
-	if err := database.DB.Model(&model.ArticleModel{}).
+	if err := database.DB.Model(&Article{}).
 		Preload("Tags").
 		Preload("Categories").
 		Order("created_at desc").
-		Find(articles).Error; err != nil {
+		Find(&articles).Error; err != nil {
 		logrus.Warn("Get article list failed", err)
 		return nil, false
 	}
@@ -66,11 +70,12 @@ func GetArticleOrderByTime() ([]Article, bool) {
 func GetArticleById(id uint32) (*Article, bool) {
 
 	var article *Article
-	if err := database.DB.Model(&model.ArticleModel{}).Where("id = ?", id).
+	if err := database.DB.Model(&Article{}).Where("id = ?", id).
 		Preload("Tags").
 		Preload("Categories").
-		First(article).Error; err != nil {
-		logrus.Warn("Get article failed", err)
+		// 这里的articles如果前面不加 &会报错
+		First(&article).Error; err != nil {
+		logrus.Warn("Get article failed ", err)
 		return nil, false
 	}
 	return article, true
@@ -94,21 +99,30 @@ func GetArticleByTitle(title string) (*Article, bool) {
 func GetArticleByTagId(tagId uint32) ([]Article, bool) {
 
 	var articles []Article
-	if err := database.DB.Model(&model.ArticleModel{}).
-		Preload("").
-		Where("article.id = article_id").
-		Find(articles).Error; err != nil {
+	if err := database.DB.Model(&Article{}).
+		Preload("Tags").
+		Preload("Categories").
+		Find(&articles).Error; err != nil {
 		logrus.Warn("Get article list failed", err)
 		return nil, false
 	}
 
-	return articles, true
+	var newArticles []Article
+	for _, article := range articles {
+		for _, tag := range article.Tags {
+			if tag.Id == tagId {
+				newArticles = append(newArticles, article)
+			}
+		}
+	}
+
+	return newArticles, true
 }
 
 func GetArticleByCategoryId(categoryId uint32) ([]Article, bool) {
 
 	var articles []Article
-	if err := database.DB.Model(&model.ArticleModel{}).
+	if err := database.DB.Model(&Article{}).
 		Joins("join article_category_relation on category_id = ?", categoryId).
 		Where("article.id = article_id").
 		Find(articles).Error; err != nil {
@@ -119,12 +133,13 @@ func GetArticleByCategoryId(categoryId uint32) ([]Article, bool) {
 	return articles, true
 }
 
-func UpdateArticle(article *model.ArticleModel) bool {
+func UpdateArticle(article *Article) bool {
 
-	if err := database.DB.Model(&model.ArticleModel{}).Where("id = ?", article.Id).Updates(article).Error; err != nil {
+	if err := database.DB.Model(&Article{}).Where("id = ?", article.Id).Updates(article).Error; err != nil {
 		logrus.Warn("Update article failed", err)
 		return false
 	}
+
 	return true
 }
 
@@ -164,6 +179,16 @@ func GetCategories() ([]model.CategoryModel, bool) {
 		return categories, false
 	}
 	return categories, true
+}
+
+func IsExistArticleById(id uint32) bool {
+
+	var count int64
+	if err := database.DB.Model(&Article{}).Where("id = ?", id).Count(&count).Error; err != nil {
+		logrus.Warn("Get article failed", err)
+		return false
+	}
+	return count > 0
 }
 
 func (a *Article) String() string {

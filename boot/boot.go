@@ -4,6 +4,7 @@ import (
 	"DJ-Blog/internal/model"
 	"DJ-Blog/internal/service"
 	"DJ-Blog/pkg/database"
+	_ "DJ-Blog/pkg/logger"
 	_ "DJ-Blog/pkg/validate"
 )
 

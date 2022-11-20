@@ -7,8 +7,8 @@ import (
 )
 
 type TagModel struct {
-	Id   uint32 `gorm:"column:id;primaryKey;autoIncrement"`
-	Name string `gorm:"column:name;type:varchar(255)"`
+	Id   uint32 `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
+	Name string `gorm:"column:name;type:varchar(255)" json:"name"`
 }
 
 func (t *TagModel) Create() bool {

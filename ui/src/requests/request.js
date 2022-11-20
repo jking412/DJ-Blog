@@ -31,13 +31,90 @@ const logout = () => {
     axios.get(`${baseUrl}/user/logout`, {}).then(resp => {
         console.log(resp)
     })
+}
 
-        
+const articleCreate = () => {
+    axios.post(`${baseUrl}/article`, {
+        title: 'test2',
+        originContent: 'test',
+        parseContent: 'test',
+        tags: [3],
+        Categories: [1,2]
+    }).then(resp => {
+        console.log(resp)
+    })
+}
+
+const articleDelete = () => {
+    axios.delete(`${baseUrl}/article/2`, {}).then(resp => {
+        console.log(resp)
+    }).then(resp => {
+        console.log(resp)
+    })
+}
+
+const articleIndex = () => {
+    axios.get(`${baseUrl}/article`, {
+        params: {
+            pageNum: 1,
+            pageSize: 10
+        }
+    }).then(resp => {
+        console.log(resp)
+    })
+}
+
+const articleUpdate = () => {
+    axios.put(`${baseUrl}/article/4`, {
+        title: 'test',
+        originContent: 'test',
+        parseContent: 'test',
+        tags: [1,2],
+        Categories: [1,2]
+    }).then(resp => {
+        console.log(resp)
+    })
+}
+
+const articleDetail = () => {
+    axios.get(`${baseUrl}/article/4`, {}).then(resp => {
+        console.log(resp)
+    })
+}
+
+const articleOrderByTime = () => {
+    axios.get(`${baseUrl}/article/time`, {
+        params: {
+            pageNum: 1,
+            pageSize: 10
+        }
+    }).then(resp => {
+        console.log(resp)
+    })
+}
+
+const articleByTagId = () => {
+    axios.get(`${baseUrl}/article/tag/3`, {
+        params: {
+            pageNum: 1,
+            pageSize: 10
+        }
+    }).then(resp => {
+        console.log(resp)
+    })
+
 }
 
 
 export default {
     register,
     login,
-    logout
+    logout,
+    articleCreate,
+    articleDelete,
+    articleIndex,
+    articleUpdate,
+    articleDetail,
+    articleOrderByTime,
+    articleByTagId
 }

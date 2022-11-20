@@ -18,10 +18,6 @@ type UserModel struct {
 	AvatarUrl string    `gorm:"column:avatar_url;type:varchar(512)" example:"https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"`
 }
 
-func (u *UserModel) TableName() string {
-	return "users"
-}
-
 func (u *UserModel) Create() bool {
 	if err := database.DB.Create(u).Error; err != nil {
 		logrus.Warn("Create user failed", u)
