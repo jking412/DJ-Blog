@@ -25,7 +25,10 @@ var client *Client
 func init() {
 	once.Do(func() {
 		// TODO: 根据配置文件初始化不同的Oss
-		client = &Client{}
+		initMinioClient()
+		client = &Client{
+			Oss: internalMinioClient,
+		}
 	})
 }
 

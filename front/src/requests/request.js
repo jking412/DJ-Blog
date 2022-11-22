@@ -140,6 +140,21 @@ const search = () => {
     })
 }
 
+const getAvatar = () => {
+    return axios.get(`${baseUrl}/user/avatar`, {})
+}
+
+const uploadAvatar = (avatar) => {
+    const formData = new FormData()
+    formData.append('avatarImg', avatar)
+    axios.post(`${baseUrl}/user/avatar`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(resp => {
+        console.log(resp)
+    })
+}
 
 
 export default {
@@ -156,5 +171,7 @@ export default {
     articleByCategoryId,
     showTags,
     showCategories,
-    search
+    search,
+    getAvatar,
+    uploadAvatar
 }

@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import request from './requests/request';
 
 const App = () => {
+
+  const [url, setUrl] = useState('')
 
   const register = () => {
     request.register()
@@ -58,6 +61,33 @@ const App = () => {
     request.search()
   }
 
+  const getAvatar = () => {
+    request.getAvatar().then(resp => {
+      console.log(resp)
+    let array  = new  Uint8Array(resp.data)
+    console.log(array)
+    let str12 = arrayBufferToBase64(array);//转换字符串
+    console.log(str12);
+    setUrl('data:image/png;base64,'+str12)
+    function arrayBufferToBase64( buffer ) {
+        var binary = '';
+        var bytes = new Uint8Array( buffer );
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode( bytes[ i ] );
+        }
+        return window.btoa( binary );
+    }
+  })
+}
+
+
+  const uploadAvatar = () => {
+    const file = document.getElementById('file').files[0];
+    console.log(file)
+    request.uploadAvatar(file)
+  }
+
   return (
     <div>
       <button onClick={register}>register</button>
@@ -87,6 +117,14 @@ const App = () => {
       <button onClick={showCategories}>showCategories</button>
       <div></div>
       <button onClick={search}>search</button>
+      <div></div>
+      <button onClick={getAvatar}>getAvatar</button>
+      <div>
+        <input type="file" id="file"/>
+        <img src={url}/>
+      </div>
+      <div></div>
+      <button onClick={uploadAvatar}>uploadAvatar</button>
     </div>
   );
 }

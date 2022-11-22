@@ -1,13 +1,11 @@
 package controller
 
 import (
-	"DJ-Blog/internal/conf"
 	"DJ-Blog/internal/core"
 	"DJ-Blog/internal/http/request"
 	"DJ-Blog/internal/http/response"
 	"DJ-Blog/internal/service"
 	"DJ-Blog/pkg/session"
-	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -127,18 +125,20 @@ func (u *UserController) GetAvatarImg(c *gin.Context) {
 	avatarImg, ok := core.GetAvatarImg(user.Username)
 	if !ok {
 		logrus.Warn("获取头像失败")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "获取头像失败",
+		})
 		return
 	}
 
-	// TODO: 优化response包，封装响应图片的方法
-	c.Writer.Header().Set("Content-Type", "image/jpeg")
-	c.Writer.Header().Set("Content-Length", fmt.Sprintf("%d", len(avatarImg)))
-	_, _ = c.Writer.Write(avatarImg)
+	// TODO: 重构response包，封装响应图片的方法，感觉自己封装的response不如原来的简洁
+	// TODO: 数据混乱，要重新处理，包括整个处理的逻辑
+	c.Data(200, "image/jpeg", avatarImg)
 }
 
-func (u *UserController) GithubLogin(c *gin.Context) {
-	c.Redirect(http.StatusFound, fmt.Sprintf(conf.GithubCallbackUrl, conf.GithubClientId))
-}
+//func (u *UserController) GithubLogin(c *gin.Context) {
+//	c.Redirect(http.StatusFound, fmt.Sprintf(conf.GithubCallbackUrl, conf.GithubClientId))
+//}
 
 //func (u *UserController) GithubLoginCallback(c *gin.Context) {
 //	code := c.Query("code")

@@ -7,6 +7,7 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/sirupsen/logrus"
 	"io"
+	"mime/multipart"
 )
 
 type MinioClient struct {
@@ -18,24 +19,24 @@ var (
 	internalMinioClient *MinioClient
 	endpoint            = config.LoadString("oss.endpoint") // ip:port
 	accessKeyID         = config.LoadString("oss.accessKeyId")
-	accessKeySecret     = config.LoadString("oss.accessSecret")
+	accessKeySecret     = config.LoadString("oss.accessKeySecret")
 )
 
 func initMinioClient() {
-	once.Do(func() {
-		minioClient, err := minio.New(endpoint, &minio.Options{
-			Creds:  credentials.NewStaticV4(accessKeyID, accessKeySecret, ""),
-			Secure: true, // useSSL
-		})
-		if err != nil {
-			logrus.Error("minio client init error: ", err)
-		}
+	minioClient, err := minio.New(endpoint, &minio.Options{
+		Creds: credentials.NewStaticV4(accessKeyID, accessKeySecret, ""),
 
-		internalMinioClient = &MinioClient{
-			client: minioClient,
-			ctx:    context.Background(),
-		}
+		Secure: false, // useSSL
 	})
+	if err != nil {
+		logrus.Error("minio client init error: ", err)
+	}
+
+	internalMinioClient = &MinioClient{
+		client: minioClient,
+		ctx:    context.Background(),
+	}
+	logrus.Info("minio client init success")
 }
 
 func (m *MinioClient) MakeBucket(bucketName string) bool {
@@ -67,9 +68,9 @@ func (m *MinioClient) IsExistObject(bucketName, objectName string) bool {
 
 func (m *MinioClient) UploadObject(bucketName, objectName string, obj interface{}) bool {
 
-	reader := obj.(io.Reader)
+	file := obj.(multipart.File)
 
-	_, err := m.client.PutObject(m.ctx, bucketName, objectName, reader, -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
+	_, err := m.client.PutObject(m.ctx, bucketName, objectName, file, -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
 	if err != nil {
 		logrus.Error("minio upload file error: ", err)
 		return false
@@ -78,12 +79,27 @@ func (m *MinioClient) UploadObject(bucketName, objectName string, obj interface{
 }
 
 func (m *MinioClient) DownloadObject(bucketName, objectName string) (interface{}, bool) {
+	ok := m.IsExistObject(bucketName, objectName)
+	if !ok {
+		return nil, false
+	}
 	object, err := m.client.GetObject(m.ctx, bucketName, objectName, minio.GetObjectOptions{})
 	if err != nil {
 		logrus.Error("minio download file error: ", err)
 		return nil, false
 	}
-	return object, true
+	bytes := make([]byte, 0)
+	var n = 0
+	for {
+		tmpBytes := make([]byte, 1024)
+		nbytes, err := object.Read(tmpBytes)
+		n += nbytes
+		bytes = append(bytes, tmpBytes[:nbytes]...)
+		if err == io.EOF {
+			break
+		}
+	}
+	return bytes, true
 }
 
 func (m *MinioClient) DeleteObject(bucketName, objectName string) bool {

@@ -5,7 +5,6 @@ import (
 	"DJ-Blog/pkg/oss"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"io"
 	"mime/multipart"
 )
 
@@ -31,7 +30,9 @@ func UploadAvatarImg(username string, avatarImg *multipart.FileHeader) bool {
 		}
 	}
 
-	ok = oss.UploadFile(username, conf.OssAvatarImgObjectName, avatarImg)
+	avatarFile, _ := avatarImg.Open()
+
+	ok = oss.UploadFile(username, conf.OssAvatarImgObjectName, avatarFile)
 	if !ok {
 		logrus.Error("上传头像失败")
 		return false
@@ -42,20 +43,11 @@ func UploadAvatarImg(username string, avatarImg *multipart.FileHeader) bool {
 
 func GetAvatarImg(username string) ([]byte, bool) {
 
-	file, ok := oss.DownloadFile(username, conf.OssAvatarImgObjectName)
+	bytes, ok := oss.DownloadFile(username, conf.OssAvatarImgObjectName)
 	if !ok {
 		logrus.Warn("下载头像失败")
 		return nil, false
 	}
 
-	fileReader := file.(io.Reader)
-
-	var buf []byte
-	var err error
-	buf,err = io.ReadAll(fileReader)
-	if err != nil{
-		logrus.Warn("读取头像失败",err)
-	}
-
-	return buf, true
+	return bytes.([]byte), true
 }

@@ -1,3 +1,4 @@
 .idea
 main.exe
 **/config.yaml
+pkg/oss/*.txt
